@@ -532,8 +532,8 @@
     <footer class="bg-dark text-white py-4">
         <div class="container text-center">
             <p>&copy; 2025 Aseguradora Pankej. Todos los derechos reservados. |
-                <a href="#" class="text-light">Términos y Condiciones</a> |
-                <a href="#" class="text-light">Política de Privacidad</a>
+                <a href="#">Términos y Condiciones</a> |
+                <a href="#">Política de Privacidad</a>
             </p>
         </div>
     </footer>
