@@ -55,6 +55,10 @@ Route::get('/guia-siniestro', function () {
     return view('cliente.guia-siniestro');
 })->name('guia.siniestro');
 
+Route::get('/reportar-siniestro', function () {
+    return view('cliente.reportar-siniestro');
+})->name('reportar.siniestro');
+
 Route::get('/contactar', function () {
     return view('cliente.contactar');
 })->name('contactar');

@@ -111,7 +111,8 @@
             padding-right: 1rem;
         }
 
-        .btn-back {
+        .btn-back,
+        .btn-report {
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 50px;
@@ -124,7 +125,8 @@
             margin-left: 1rem;
         }
 
-        .btn-back:hover {
+        .btn-back:hover,
+        .btn-report:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
         }
@@ -295,7 +297,8 @@
                 padding: 1.5rem;
             }
 
-            .btn-back {
+            .btn-back,
+            .btn-report {
                 margin-left: 0;
             }
         }
@@ -315,6 +318,7 @@
             </div>
             <div class="back-button">
                 <a href="{{ route('home') }}" class="btn btn-back">Volver a Inicio</a>
+                <a href="{{ route('reportar.siniestro') }}" class="btn btn-report">Reportar Siniestro</a>
             </div>
         </div>
     </header>
@@ -416,7 +420,8 @@
                             <strong>Indemnización por fallecimiento:</strong> Pago a los derechohabientes del fallecido.
                             En caso de conflicto de intereses entre los derechohabientes, se realiza un depósito
                             judicial. <strong>Indemnización por incapacidad permanente:</strong> Pago de la
-                            indemnización a la víctima.</p>
+                            indemnización a la víctima.
+                        </p>
                     </div>
                 </div>
 
