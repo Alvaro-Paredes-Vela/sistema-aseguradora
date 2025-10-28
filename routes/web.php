@@ -108,3 +108,6 @@ Route::post('/cotizar/generar-pdf', function (Request $request) {
     return $pdf->download('cotizacion.pdf');
 })->name('cotizar.generar.pdf');
 */
+Route::get('/Precio', function (Request $request) {
+    return view('admin.precio');
+})->name('precio');
