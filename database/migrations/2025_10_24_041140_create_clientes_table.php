@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('login', 50)->unique()->notNullable();
             $table->string('password', 120);
             $table->string('correo', 100)->nullable();
-            $table->string('nombres', 50);
+            $table->string('nombre', 50);
             $table->string('paterno', 50);
             $table->string('materno', 50);
             $table->string('direccion', 100)->nullable();
-            $table->string('nro_telefono', 15)->nullable();
+            $table->string('telefono', 15)->nullable();
             $table->boolean('estado')->default(true);
+            $table->string('foto')->nullable(); // ruta de la foto del cliente (opcional)
             $table->timestamps();
         });
     }

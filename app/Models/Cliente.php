@@ -17,12 +17,13 @@ class Cliente extends Authenticatable
         'login',
         'password',
         'correo',
-        'nombres',
+        'nombre',
         'paterno',
         'materno',
         'direccion',
-        'nro_telefono',
-        'estado'
+        'telefono',
+        'estado',
+        'foto'
     ];
 
     // Especificar el nombre del campo de contraseña

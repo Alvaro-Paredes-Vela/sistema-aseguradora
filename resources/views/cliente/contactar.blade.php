@@ -307,7 +307,7 @@
                 </div>
             </div>
             <div class="back-button">
-                <a href="{{ route('home') }}" class="btn btn-back">Volver a Inicio</a>
+                <a href="{{ route('welcome') }}" class="btn btn-back">Volver a Inicio</a>
             </div>
         </div>
     </header>

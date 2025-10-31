@@ -4,16 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ClienteController extends Controller
 {
     public function index()
     {
+        if (!Session::has('cliente_id')) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión.');
+        }
+
         $clientes = Cliente::all();
         return view('cliente.home', compact('clientes'));
+    }
+
+    public function automotriz()
+    {
+        if (!Session::has('cliente_id')) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para acceder a esta página.');
+        }
+        $clientes = Cliente::all();
+        return view('cliente.AutoMotrizHome');
     }
 
     public function create()
@@ -26,28 +40,35 @@ class ClienteController extends Controller
         $request->validate([
             'login' => 'required|unique:clientes|max:50',
             'password' => 'required|max:100',
-            'correo' => 'nullable|email|max:100',
-            'nombres' => 'nullable|max:50',
-            'paterno' => 'nullable|max:50',
-            'materno' => 'nullable|max:50',
-            'direccion' => 'nullable|max:100',
-            'nro_telefono' => 'nullable|max:15',
-            'estado' => 'nullable|boolean',
+            'correo' => 'required|email|max:255|unique:clientes',
+            'nombre' => 'required|string|max:255',
+            'paterno' => 'required|string|max:255',
+            'materno' => 'required|string|max:255',
+            'direccion' => 'required|string|max:255',
+            'telefono' => 'required|string|max:20',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $cliente = new \App\Models\Cliente();
+        $cliente = new Cliente();
         $cliente->login = $request->login;
-        $cliente->password = Hash::make($request->password); // Encriptar la contraseña
+        $cliente->password = Hash::make($request->password);
         $cliente->correo = $request->correo;
-        $cliente->nombres = $request->nombres;
+        $cliente->nombre = $request->nombre;
         $cliente->paterno = $request->paterno;
         $cliente->materno = $request->materno;
         $cliente->direccion = $request->direccion;
-        $cliente->nro_telefono = $request->nro_telefono;
-        $cliente->estado = $request->estado ?? true;
+        $cliente->telefono = $request->telefono;
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('fotos', 'public');
+            $cliente->foto = $path;
+        }
+
         $cliente->save();
 
-        return redirect()->route('login')->with('success', 'Registro exitoso. Por favor, inicia sesión.');
+        Session::put('cliente_id', $cliente->id_cliente);
+        Session::put('cliente_nombre', $cliente->nombre);
+        return redirect()->route('welcome')->with('success', 'Registro exitoso. Por favor, inicia sesión.');
     }
 
     public function show($id_cliente)
@@ -55,46 +76,80 @@ class ClienteController extends Controller
         $cliente = Cliente::findOrFail($id_cliente);
         return view('cliente.show', compact('cliente'));
     }
-    /*
-    public function edit($id_cliente)
+
+    public function edit($id)
     {
-        $cliente = Cliente::findOrFail($id_cliente);
-        return view('cliente.edit', compact('cliente'));
+        if (!Session::has('cliente_id') || Session::get('cliente_id') != $id) {
+            return redirect()->route('login')->with('error', 'No tienes permiso para editar este perfil.');
+        }
+        $cliente = Cliente::findOrFail($id);
+        return view('cliente.mi-perfil', compact('cliente'));
     }
-*/
+
     public function update(Request $request, $id_cliente)
     {
-        $request->validate([
-            'login' => 'required|unique:clientes,login,' . $id_cliente . ',id_cliente|max:50',
-            'password' => 'required|max:100',
-            'correo' => 'nullable|email|max:100',
-            'nombres' => 'nullable|max:50',
-            'paterno' => 'nullable|max:50',
-            'materno' => 'nullable|max:50',
-            'direccion' => 'nullable|max:100',
-            'nro_telefono' => 'nullable|max:15',
-            'estado' => 'boolean',
-        ]);
+        if (!Session::has('cliente_id') || Session::get('cliente_id') != $id_cliente) {
+            return redirect()->route('login')->with('error', 'No tienes permiso para actualizar este perfil.');
+        }
 
         $cliente = Cliente::findOrFail($id_cliente);
-        $cliente->update($request->all());
-        return redirect()->route('clientes.index')->with('success', 'Cliente actualizado exitosamente.');
+
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'paterno' => 'required|string|max:255',
+            'materno' => 'required|string|max:255',
+            'correo' => ['required', 'email', 'max:255', Rule::unique('clientes')->ignore($cliente->id_cliente, 'id_cliente')],
+            'telefono' => 'required|string|max:20',
+            'direccion' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            if ($cliente->foto) {
+                Storage::disk('public')->delete($cliente->foto);
+            }
+            $path = $request->file('foto')->store('fotos', 'public');
+            $cliente->foto = $path;
+        }
+
+        $cliente->nombre = $request->nombre;
+        $cliente->paterno = $request->paterno;
+        $cliente->materno = $request->materno;
+        $cliente->correo = $request->correo;
+        $cliente->telefono = $request->telefono;
+        $cliente->direccion = $request->direccion;
+
+        try {
+            $cliente->save();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al actualizar el perfil: ' . $e->getMessage())->withInput();
+        }
+
+        Session::put('cliente_nombre', $cliente->nombre);
+        return redirect()->route('clientes.edit', $id_cliente)->with('success', 'Perfil actualizado correctamente.');
     }
 
     public function destroy($id_cliente)
     {
+        if (!Session::has('cliente_id') || Session::get('cliente_id') != $id_cliente) {
+            return redirect()->route('login')->with('error', 'No tienes permiso para eliminar esta cuenta.');
+        }
+
         $cliente = Cliente::findOrFail($id_cliente);
+        if ($cliente->foto) {
+            Storage::disk('public')->delete($cliente->foto);
+        }
         $cliente->delete();
-        return redirect()->route('clientes.index')->with('success', 'Cliente eliminado exitosamente.');
+
+        Session::forget(['cliente_id', 'cliente_nombre']);
+        return redirect()->route('home')->with('success', 'Cuenta eliminada correctamente.');
     }
 
-    // Método para mostrar el formulario de login del cliente
     public function login()
     {
         return view('cliente.Auth.login');
     }
 
-    // Método para autenticar al cliente
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -102,20 +157,14 @@ class ClienteController extends Controller
             'password' => 'required|max:255',
         ]);
 
-        // Buscar el cliente en la base de datos
         $cliente = Cliente::where('login', $credentials['login'])->first();
 
-        // Verificar si el cliente existe y la contraseña es correcta
         if ($cliente && Hash::check($credentials['password'], $cliente->password)) {
-            // Iniciar sesión manualmente
             Session::put('cliente_id', $cliente->id_cliente);
-            Session::put('cliente_nombre', $cliente->nombres ?? 'Cliente');
-
-            // Redirigir al home
-            return redirect()->route('home')->with('success', 'Inicio de sesión exitoso.');
+            Session::put('cliente_nombre', $cliente->nombre ?? 'Cliente');
+            return redirect()->route('welcome')->with('success', 'Inicio de sesión exitoso.');
         }
 
-        // Credenciales incorrectas
         return back()->withErrors([
             'login' => 'Las credenciales proporcionadas no son correctas.',
         ])->onlyInput('login');
@@ -123,13 +172,10 @@ class ClienteController extends Controller
 
     public function logout(Request $request)
     {
-        // Cerrar sesión manualmente
-        Session::forget('cliente_id');
-        Session::forget('cliente_nombre');
+        Session::forget(['cliente_id', 'cliente_nombre']);
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect()->route('home')->with('success', 'Sesión cerrada exitosamente.');
+        return redirect()->route('welcome')->with('success', 'Sesión cerrada exitosamente.');
     }
 
     public function showRegisterForm()
@@ -142,35 +188,36 @@ class ClienteController extends Controller
         $request->validate([
             'login' => 'required|unique:clientes|max:50',
             'password' => 'required|min:6',
-            'nombres' => 'required',
-            // Otros campos...
+            'nombre' => 'required|string|max:255',
+            'paterno' => 'required|string|max:255',
+            'materno' => 'required|string|max:255',
+            'correo' => 'required|email|max:255|unique:clientes',
+            'telefono' => 'required|string|max:20',
+            'direccion' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $cliente = Cliente::create([
             'login' => $request->login,
             'password' => Hash::make($request->password),
-            'nombres' => $request->nombres,
-            // Otros campos...
+            'nombre' => $request->nombre,
+            'paterno' => $request->paterno,
+            'materno' => $request->materno,
+            'correo' => $request->correo,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'foto' => $request->hasFile('foto') ? $request->file('foto')->store('fotos', 'public') : null,
         ]);
 
         Session::put('cliente_id', $cliente->id_cliente);
-        Session::put('cliente_nombre', $cliente->nombres);
-        return redirect()->route('home')->with('success', 'Registro exitoso. ¡Bienvenido!');
-    }
-
-    public function edit($id)
-    {
-        if (!Session::has('cliente_id')) {
-            return redirect()->route('home')->with('error', 'Debes iniciar sesión para editar tus datos.');
-        }
-        $cliente = Cliente::findOrFail($id);
-        return view('cliente.editarDatos', compact('cliente'));
+        Session::put('cliente_nombre', $cliente->nombre);
+        return redirect()->route('welcome')->with('success', 'Registro exitoso. ¡Bienvenido!');
     }
 
     public function verifyVigencia()
     {
         if (!Session::has('cliente_id')) {
-            return redirect()->route('home')->with('error', 'Debes iniciar sesión para verificar la vigencia.');
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para verificar la vigencia.');
         }
         return view('cliente.VerificarVigencia');
     }
@@ -178,7 +225,7 @@ class ClienteController extends Controller
     public function showComprobante()
     {
         if (!Session::has('cliente_id')) {
-            return redirect()->route('home')->with('error', 'Debes iniciar sesión para acceder al comprobante.');
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para acceder al comprobante.');
         }
         return view('cliente.auth.loginComprobante');
     }

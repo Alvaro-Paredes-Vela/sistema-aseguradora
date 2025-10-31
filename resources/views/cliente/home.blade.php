@@ -342,14 +342,15 @@
 
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('welcome') }}">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a>
+                            </li>
                             <li class="nav-item"><a class="nav-link" href="#precios">Precios</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#contacto">Contáctanos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('contactar') }}">Contáctanos</a>
+                            </li>
                             @if (Session::has('cliente_id'))
                                 <li class="nav-item">
-                                    <span class="nav-link text-success">Bienvenido,
-                                        {{ Session::get('cliente_nombre', 'Cliente') }}</span>
+                                    <span class="nav-link">BIENVENIDO: {{ Session::get('cliente_nombre') }}</span>
                                 </li>
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('clientes.logout') }}">
@@ -504,7 +505,7 @@
                         </div>
                         <h3>Compra tu SOAT</h3>
                         <p>Adquiere tu SOAT en línea de forma rápida y segura con nuestros métodos de pago.</p>
-                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Cotizar</a>
+                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Comprar</a>
                     </div>
                 </div>
 

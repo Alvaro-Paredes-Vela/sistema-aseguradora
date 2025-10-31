@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aseguradora Pankej - Seguros para tu Tranquilidad</title>
+    <title>Seguro Automotriz - Aseguradora Pankej</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -177,14 +177,14 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Sección de Opciones de Seguros */
-        .insurance-options {
+        /* Sección de Servicios */
+        .services-section {
             padding: 4rem 0;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
         }
 
-        .option-card {
+        .service-card {
             background: white;
             border-radius: 20px;
             padding: 2rem;
@@ -194,13 +194,9 @@
             border: none;
             position: relative;
             overflow: hidden;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
 
-        .option-card::before {
+        .service-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -210,12 +206,12 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
 
-        .option-card:hover {
+        .service-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .option-icon {
+        .service-icon {
             width: 80px;
             height: 80px;
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
@@ -225,22 +221,20 @@
             justify-content: center;
             margin: 0 auto 1rem;
             color: white;
-            font-size: 2rem;
+            font-size: 1.8rem;
             box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
         }
 
-        .option-card h3 {
+        .service-card h3 {
             color: var(--primary-color);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 1.8rem;
-            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
         }
 
-        .option-card p {
+        .service-card p {
             color: #666;
             line-height: 1.6;
-            text-align: center;
         }
 
         /* Botones */
@@ -290,20 +284,15 @@
                 font-size: 1.3rem;
             }
 
-            .option-card {
+            .service-card {
                 margin: 1rem;
                 padding: 1.5rem;
-                height: 250px;
             }
         }
 
         @media (max-width: 576px) {
             .hero-title {
                 font-size: 2rem;
-            }
-
-            .option-card {
-                height: 280px;
             }
         }
 
@@ -320,16 +309,24 @@
             }
         }
 
-        .option-card {
+        .service-card {
             animation: fadeInUp 0.6s ease forwards;
         }
 
-        .option-card:nth-child(1) {
+        .service-card:nth-child(1) {
             animation-delay: 0.1s;
         }
 
-        .option-card:nth-child(2) {
+        .service-card:nth-child(2) {
             animation-delay: 0.2s;
+        }
+
+        .service-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .service-card:nth-child(4) {
+            animation-delay: 0.4s;
         }
     </style>
 </head>
@@ -356,14 +353,12 @@
 
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#contacto">Contáctanos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('welcome') }}">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('contactar') }}">Contáctanos</a>
+                            </li>
                             @if (Session::has('cliente_id'))
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2"
-                                        href="{{ route('clientes.edit', Session::get('cliente_id')) }}">
-                                        <i class="fas fa-user me-1"></i>Perfil
-                                    </a>
+                                    <span class="nav-link">BIENVENIDO: {{ Session::get('cliente_nombre') }}</span>
                                 </li>
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('clientes.logout') }}">
@@ -394,8 +389,8 @@
     <section class="hero-section" id="inicio">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">Aseguradora Pankej</h1>
-                <p class="hero-subtitle">Protege tu tranquilidad con nuestros seguros confiables y accesibles.</p>
+                <h1 class="hero-title">Seguro Automotriz Pankej</h1>
+                <p class="hero-subtitle">Protección completa para tu vehículo contra daños, robo y más.</p>
                 <a href="#seguros" class="btn btn-primary-custom btn-lg">
                     <i class="fas fa-arrow-down me-2"></i>Conoce Nuestros Seguros
                 </a>
@@ -403,60 +398,73 @@
         </div>
     </section>
 
-    <!-- Explicación de Seguros -->
+    <!-- Explicación del Seguro Automotriz -->
     <section class="insurance-explanation" id="seguros">
         <div class="container">
-            <h2><i class="fas fa-shield-alt text-primary me-3"></i>Nuestros Seguros</h2>
+            <h2><i class="fas fa-car text-primary me-3"></i>¿Qué es el Seguro Automotriz?</h2>
             <div class="row">
-                <div class="col-md-6 mb-4">
-                    <h3 class="text-primary">Seguro Obligatorio (SOAT)</h3>
+                <div class="col-12">
                     <p>
-                        El <strong>Seguro Obligatorio de Accidentes de Tránsito (SOAT)</strong> es un requisito legal
-                        para todos los vehículos en Bolivia. Cubre gastos médicos, indemnizaciones por muerte o
-                        incapacidad permanente en caso de accidentes de tránsito. Con Aseguradora Pankej, obtienes
-                        una cobertura rápida y confiable para cumplir con la normativa y proteger tu tranquilidad.
-                    </p>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <h3 class="text-primary">Seguro Voluntario (A|M)</h3>
-                    <p>
-                        El <strong>Seguro Voluntario (Auto Motriz)</strong> ofrece una protección adicional adaptada a
-                        tus
-                        necesidades. Cubre daños al vehículo, robo, responsabilidad civil y otros riesgos no incluidos
-                        en el SOAT. Personaliza tu póliza con Aseguradora Pankej para garantizar una cobertura
-                        completa para tu vehículo y tu seguridad.
+                        El <strong>Seguro Automotriz</strong> de Aseguradora Pankej ofrece una protección integral para
+                        tu vehículo, cubriendo daños por accidentes, robo, responsabilidad civil frente a terceros, y
+                        otros riesgos no incluidos en el SOAT. Personaliza tu póliza según tus necesidades para
+                        garantizar la máxima seguridad y tranquilidad mientras conduces. Con nuestro equipo de soporte
+                        disponible 24/7, aseguramos una atención rápida y eficiente en caso de siniestros.
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Opciones de Seguros -->
-    <section class="insurance-options">
+    <!-- Servicios del Seguro Automotriz -->
+    <section class="services-section">
         <div class="container">
             <h2 class="text-center mb-5" style="color: white; font-family: 'Orbitron', sans-serif;">
-                <i class="fas fa-car-side text-accent me-3"></i>Elige tu Seguro
+                <i class="fas fa-car-side text-accent me-3"></i>Servicios del Seguro Automotriz
             </h2>
-            <div class="row justify-content-center">
-                <div class="col-lg-5 col-md-6 mb-4">
-                    <div class="option-card">
-                        <div class="option-icon">
-                            <i class="fas fa-shield-alt"></i>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-tools"></i>
                         </div>
-                        <h3>Seguro SOAT</h3>
-                        <p>Cumple con la normativa y protege a los ocupantes de tu vehículo en caso de accidentes.</p>
-                        <a href="{{ route('home') }}" class="btn btn-primary-custom mb-3">SOAT</a>
+                        <h3>Cobertura de Daños</h3>
+                        <p>Reparamos los daños a tu vehículo causados por accidentes o eventos imprevistos.</p>
+                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Cotizar</a>
                     </div>
                 </div>
-                <div class="col-lg-5 col-md-6 mb-4">
-                    <div class="option-card">
-                        <div class="option-icon">
-                            <i class="fas fa-car"></i>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-shield-alt"></i>
                         </div>
-                        <h3>Seguro Automotriz</h3>
-                        <p>Protección completa contra daños, robo y responsabilidad civil para tu vehículo.</p>
-                        <a href="{{ route('automotriz') }}" class="btn btn-primary-custom mb-3">
-                            Automotriz</a>
+                        <h3>Protección contra Robo</h3>
+                        <p>Cobertura en caso de robo total o parcial de tu vehículo, con indemnización rápida.</p>
+                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Cotizar</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Responsabilidad Civil</h3>
+                        <p>Protección frente a daños a terceros, incluyendo bienes y personas, causados por tu vehículo.
+                        </p>
+                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Cotizar</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>Asistencia en Siniestros</h3>
+                        <p>Atención 24/7 para gestionar siniestros, con soporte inmediato y guía especializada.</p>
+                        <a href="{{ route('guia.siniestro') }}" class="btn btn-primary-custom mt-3">Ver Guía</a>
                     </div>
                 </div>
             </div>

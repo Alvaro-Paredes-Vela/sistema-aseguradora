@@ -335,11 +335,11 @@
                     @enderror
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="nombres" class="form-label">Nombres</label>
-                    <input type="text" name="nombres" id="nombres"
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" name="nombre" id="nombre"
                         class="form-control @error('nombres') is-invalid @enderror" placeholder="Ingresa tu nombre"
-                        value="{{ old('nombres') }}">
-                    @error('nombres')
+                        value="{{ old('nombre') }}">
+                    @error('nombre')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -371,11 +371,11 @@
                     @enderror
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="nro_telefono" class="form-label">Teléfono</label>
-                    <input type="text" name="nro_telefono" id="nro_telefono"
-                        class="form-control @error('nro_telefono') is-invalid @enderror"
-                        placeholder="Ingresa tu teléfono" value="{{ old('nro_telefono') }}">
-                    @error('nro_telefono')
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" id="telefono"
+                        class="form-control @error('telefono') is-invalid @enderror" placeholder="Ingresa tu teléfono"
+                        value="{{ old('telefono') }}">
+                    @error('telefono')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

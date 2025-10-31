@@ -8,8 +8,11 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\CategoriaController;
 
 Route::get('/', function () {
-    return view('cliente.home');
-})->name('home');
+    return view('welcome');
+})->name('welcome');
+
+// Rutas para la página principal del cliente
+Route::get('/home', [ClienteController::class, 'index'])->name('home');
 
 // Rutas para administración (asociadas a empleados)
 Route::get('/admin', [EmpleadoController::class, 'login'])->name('admin.login');
@@ -35,20 +38,20 @@ Route::get('/logout-cliente', [ClienteController::class, 'logout'])->name('clien
 
 Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
 Route::get('/clientes/{id_cliente}', [ClienteController::class, 'show'])->name('clientes.show');
-Route::get('/clientes/{id_cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
 Route::put('/clientes/{id_cliente}', [ClienteController::class, 'update'])->name('clientes.update');
+Route::get('/clientes/{id_cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
 Route::delete('/clientes/{id_cliente}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 
 // Rutas CRUD para Categoria (accesible por empleados)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
-    Route::get('/categorias/create', [CategoriaController::class, 'create'])->name('categorias.create');
-    Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
-    Route::get('/categorias/{id_categoria}', [CategoriaController::class, 'show'])->name('categorias.show');
-    Route::get('/categorias/{id_categoria}/edit', [CategoriaController::class, 'edit'])->name('categorias.edit');
-    Route::put('/categorias/{id_categoria}', [CategoriaController::class, 'update'])->name('categorias.update');
-    Route::delete('/categorias/{id_categoria}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
-});
+
+Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
+Route::get('/categorias/create', [CategoriaController::class, 'create'])->name('categorias.create');
+Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
+Route::get('/categorias/{id_categoria}', [CategoriaController::class, 'show'])->name('categorias.show');
+Route::get('/categorias/{id_categoria}/edit', [CategoriaController::class, 'edit'])->name('categorias.edit');
+Route::put('/categorias/{id_categoria}', [CategoriaController::class, 'update'])->name('categorias.update');
+Route::delete('/categorias/{id_categoria}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
+
 
 // Otras rutas de cliente
 Route::get('/guia-siniestro', function () {
@@ -111,3 +114,6 @@ Route::post('/cotizar/generar-pdf', function (Request $request) {
 Route::get('/Precio', function (Request $request) {
     return view('admin.precio');
 })->name('precio');
+
+// Ruta para el archivo automotriz.blade.php
+Route::get('/automotriz', [ClienteController::class, 'automotriz'])->name('automotriz');
