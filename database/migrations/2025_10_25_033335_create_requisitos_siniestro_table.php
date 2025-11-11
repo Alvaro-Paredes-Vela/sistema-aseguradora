@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('requisitos_siniestro', function (Blueprint $table) {
+            $table->char('obligatorio', 1)->default('N');
             $table->unsignedBigInteger('id_siniestro');
             $table->unsignedBigInteger('id_requisito');
             $table->primary(['id_siniestro', 'id_requisito']);

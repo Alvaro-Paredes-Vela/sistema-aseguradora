@@ -361,24 +361,24 @@
                             @if (Session::has('cliente_id'))
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2"
-                                        href="{{ route('clientes.edit', Session::get('cliente_id')) }}">
+                                        href="{{ route('cliente.perfil', Session::get('cliente_id')) }}">
                                         <i class="fas fa-user me-1"></i>Perfil
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('clientes.logout') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.logout') }}">
                                         <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
                                     </a>
                                 </li>
                             @else
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('login') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.login') }}">
                                         <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2"
-                                        href="{{ route('register.cliente') }}">
+                                        href="{{ route('cliente.register') }}">
                                         <i class="fas fa-user-shield me-1"></i>Registrarme
                                     </a>
                                 </li>
@@ -445,7 +445,7 @@
                         </div>
                         <h3>Seguro SOAT</h3>
                         <p>Cumple con la normativa y protege a los ocupantes de tu vehículo en caso de accidentes.</p>
-                        <a href="{{ route('home') }}" class="btn btn-primary-custom mb-3">SOAT</a>
+                        <a href="{{ route('cliente.soat') }}" class="btn btn-primary-custom mb-3">SOAT</a>
                     </div>
                 </div>
                 <div class="col-lg-5 col-md-6 mb-4">

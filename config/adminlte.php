@@ -324,9 +324,51 @@ return [
             'text' => 'Precio',
             'url' => '/Precio',
             'icon' => 'far fa-fw fa-file',
-           // 'label' => 4,
+            'label' => null,
             'label_color' => 'success',
         ],
+
+        [
+            'text' => 'Categorías',
+            'url' => '/categorias',
+            'icon' => 'fas fa-tags',
+            'label' => null,
+            'label_color' => 'danger',
+            //'can' => 'manage-categorias', // Permiso (opcional)
+        ],
+
+        [
+            'text' => 'Tipos de Seguro',
+            'url' => '/tipos-seguro',
+            'icon' => 'fas fa-shield-alt',
+        ],
+
+        [
+            'text' => 'Pagos Pendientes',
+            'url' => '/admin/pagos-pendientes',  // ← URL DIRECTA
+            'icon' => 'fas fa-clock',
+            'icon_color' => 'warning',
+        ],
+
+        [
+            'text' => 'Aprobados',
+            'url'  => '/admin/pagos/aprobados',
+            'icon' => 'fas fa-check-circle',
+            'icon_color' => 'success',
+        ],
+
+        [
+            'text' => 'Rechazados',
+            'url'  => '/admin/pagos/rechazados',
+            'icon' => 'fas fa-times-circle',
+            'icon_color' => 'danger',
+        ],
+
+
+
+        /*=======================================================================================================*/
+
+
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

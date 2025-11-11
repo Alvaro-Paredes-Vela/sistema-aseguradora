@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id('id_requisito');
             $table->string('nombre', 100)->nullable();
             $table->text('descripcion')->nullable();
-            $table->boolean('obligatorio')->default(false);
             $table->string('tipo', 50)->nullable();
             $table->timestamps();
         });

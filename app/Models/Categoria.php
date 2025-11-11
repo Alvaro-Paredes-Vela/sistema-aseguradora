@@ -16,4 +16,9 @@ class Categoria extends Model
         'coberturas',
         'descripcion'
     ];
+
+    public function seguros()
+    {
+        return $this->hasMany(Seguro::class, 'id_categoria', 'id_categoria');
+    }
 }

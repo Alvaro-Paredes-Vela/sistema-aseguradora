@@ -14,6 +14,7 @@ class Cliente extends Authenticatable
     protected $primaryKey = 'id_cliente';
 
     protected $fillable = [
+        'CI',
         'login',
         'password',
         'correo',
@@ -47,5 +48,18 @@ class Cliente extends Authenticatable
     public function getAuthIdentifier()
     {
         return $this->id_cliente; // Devolver el id_cliente como identificador
+    }
+
+    public function vehiculos()
+    {
+        return $this->hasMany(Vehiculo::class, 'id_cliente', 'id_cliente');
+    }
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class, 'id_cliente', 'id_cliente');
+    }
+    public function reclamos()
+    {
+        return $this->hasMany(Reclamo::class, 'id_cliente', 'id_cliente');
     }
 }

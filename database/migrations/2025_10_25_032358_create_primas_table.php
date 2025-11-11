@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('primas', function (Blueprint $table) {
             $table->id('id_prima');
-            $table->unsignedBigInteger('id_poliza');
             $table->decimal('monto', 12, 2);
             $table->date('fecha_inicio')->nullable();
             $table->date('fecha_fin')->nullable();
             $table->string('estado', 20)->nullable();
             $table->text('descripcion')->nullable();
-            $table->foreign('id_poliza')->references('id_poliza')->on('policias')->onDelete('cascade');
+            $table->unsignedBigInteger('id_poliza');
+            $table->foreign('id_poliza')->references('id_poliza')->on('polizas')->onDelete('cascade');
             $table->timestamps();
         });
     }

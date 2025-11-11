@@ -6,7 +6,13 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ReclamoController;
+use App\Http\Controllers\SoatController;
+use App\Http\Controllers\VehiculoController;
+use App\Http\Controllers\TipoSeguroController;
+use App\Http\Controllers\PagoPendienteController;
 
+// === PÁGINA PRINCIPAL (pública) ===
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -28,6 +34,61 @@ Route::get('/empleados/{id_empleado}/edit', [EmpleadoController::class, 'edit'])
 Route::put('/empleados/{id_empleado}', [EmpleadoController::class, 'update'])->name('empleados.update');
 Route::delete('/empleados/{id_empleado}', [EmpleadoController::class, 'destroy'])->name('empleados.destroy');
 
+/// routes/web.php
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // PENDIENTES (YA LA TIENES)
+    Route::get('/pagos-pendientes', [PagoPendienteController::class, 'index'])
+        ->name('pagos-pendientes.index');
+
+    // APROBAR / RECHAZAR (CORREGIDO: usa {pago}, no {venta})
+    Route::post('/pagos-pendientes/{pago}/aprobar', [PagoPendienteController::class, 'aprobar'])
+        ->name('pagos-pendientes.aprobar');
+
+    Route::post('/pagos-pendientes/{pago}/rechazar', [PagoPendienteController::class, 'rechazar'])
+        ->name('pagos-pendientes.rechazar');
+
+    // NUEVAS RUTAS PARA APROBADOS Y RECHAZADOS
+    Route::get('/pagos/aprobados', [PagoPendienteController::class, 'aprobados'])
+        ->name('pagos.aprobados');
+
+    Route::get('/pagos/rechazados', [PagoPendienteController::class, 'rechazados'])
+        ->name('pagos.rechazados');
+});
+
+// === CLIENTES (público + auth manual) ===
+Route::prefix('cliente')->name('cliente.')->group(function () {
+    // Auth pública
+    Route::get('/login', [ClienteController::class, 'loginForm'])->name('login');
+    Route::post('/login', [ClienteController::class, 'login'])->name('authenticate');
+    Route::get('/logout', [ClienteController::class, 'logout'])->name('logout');
+    Route::get('/register', [ClienteController::class, 'registerForm'])->name('register');
+    Route::post('/register', [ClienteController::class, 'store'])->name('store');
+    // Dashboard (auth manual en controlador)
+    Route::get('/dashboard', [ClienteController::class, 'dashboard'])->name('dashboard');
+
+    // Dashboard SOAT (home)
+    Route::get('/soat', [ClienteController::class, 'soatDashboard'])->name('soat');  // Nueva ruta
+
+    // Automotriz
+    Route::get('/automotriz', [ClienteController::class, 'automotriz'])->name('automotriz');
+
+    // Perfil (auth manual en controlador)
+    Route::get('/perfil', [ClienteController::class, 'edit'])->name('perfil');
+    Route::put('/perfil', [ClienteController::class, 'update'])->name('update');
+    Route::delete('/cuenta', [ClienteController::class, 'destroy'])->name('destroy');
+
+    // Futuras: cotizar, vigencia, etc.
+    Route::get('/cotizar', [ClienteController::class, 'cotizarForm'])->name('cotizar');  // Placeholder
+    Route::get('/vigencia', [ClienteController::class, 'vigencia'])->name('vigencia');
+    Route::get('/comprobante', [ClienteController::class, 'comprobante'])->name('comprobante');
+
+    // routes/web.php
+    Route::get('/precios-soat', function () {
+        return view('cliente.Comprar-Soat.precios');
+    })->name('soat.precios');
+});
+/*
 // Rutas para autenticación de clientes
 Route::get('/register-cliente', [ClienteController::class, 'create'])->name('register.cliente');
 Route::post('/register-cliente', [ClienteController::class, 'store'])->name('clientes.store');
@@ -41,9 +102,8 @@ Route::get('/clientes/{id_cliente}', [ClienteController::class, 'show'])->name('
 Route::put('/clientes/{id_cliente}', [ClienteController::class, 'update'])->name('clientes.update');
 Route::get('/clientes/{id_cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
 Route::delete('/clientes/{id_cliente}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
-
+*/
 // Rutas CRUD para Categoria (accesible por empleados)
-
 Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 Route::get('/categorias/create', [CategoriaController::class, 'create'])->name('categorias.create');
 Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
@@ -52,6 +112,13 @@ Route::get('/categorias/{id_categoria}/edit', [CategoriaController::class, 'edit
 Route::put('/categorias/{id_categoria}', [CategoriaController::class, 'update'])->name('categorias.update');
 Route::delete('/categorias/{id_categoria}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
 
+// rutas para tipo de seguro
+Route::get('/tipos-seguro', [TipoSeguroController::class, 'index'])->name('tipos-seguro.index');
+Route::get('/tipos-seguro/create', [TipoSeguroController::class, 'create'])->name('tipos-seguro.create');
+Route::post('/tipos-seguro', [TipoSeguroController::class, 'store'])->name('tipos-seguro.store');
+Route::get('/tipos-seguro/{id_tipo}/edit', [TipoSeguroController::class, 'edit'])->name('tipos-seguro.edit');
+Route::put('/tipos-seguro/{id_tipo}', [TipoSeguroController::class, 'update'])->name('tipos-seguro.update');
+Route::delete('/tipos-seguro/{id_tipo}', [TipoSeguroController::class, 'destroy'])->name('tipos-seguro.destroy');
 
 // Otras rutas de cliente
 Route::get('/guia-siniestro', function () {
@@ -115,5 +182,57 @@ Route::get('/Precio', function (Request $request) {
     return view('admin.precio');
 })->name('precio');
 
+Route::get('/Solicitar', function (Request $request) {
+    return view('cliente.solicitarAgente');
+})->name('Solicitar.agente');
+
+/* ruta para la compra de soat
+Route::get('/ventas-soat', function (Request $request) {
+    return view('cliente.Comprar-Soat.buscar-vehiculo');
+})->name('buscar.vehiculo');
+*/
+
 // Ruta para el archivo automotriz.blade.php
 Route::get('/automotriz', [ClienteController::class, 'automotriz'])->name('automotriz');
+
+// Rutas para gestión de reclamos
+Route::post('/contactanos', [ReclamoController::class, 'store'])->name('reclamos.store');
+
+/*============================================================================================================*/
+Route::prefix('soat')->name('soat.')->group(function () {
+
+    // 0. ruta dashboard soat
+    //Route::get('/', [SoatController::class, 'index'])->name('index');
+
+    // routes/web.php
+    Route::get('/comprobar-soat', [SoatController::class, 'comprobarForm'])->name('comprobar.form');
+    Route::post('/comprobar-soat', [SoatController::class, 'comprobar'])->name('comprobar');
+    Route::get('/verificar-vigencia', [SoatController::class, 'verificarForm'])->name('verificar.form');
+    Route::post('/verificar-vigencia', [SoatController::class, 'verificar'])->name('verificar');
+
+    // 1. Búsqueda
+    Route::get('/buscar', [SoatController::class, 'buscarForm'])->name('buscar.form');
+    Route::post('/buscar', [SoatController::class, 'buscar'])->name('buscar');
+
+    // 2. Vehículo
+    Route::get('/vehiculo/create', [VehiculoController::class, 'create'])->name('vehiculo.create');
+    Route::post('/vehiculo', [VehiculoController::class, 'store'])->name('vehiculo.store');
+
+    // 3. Pago
+    Route::get('/pago/{placa}', [SoatController::class, 'pagoForm'])->name('pago.form');
+    Route::post('/pago', [SoatController::class, 'pagoStore'])->name('pago.store');
+    // limpiar placa de sesión después del pago
+    // routes/web.php
+    Route::post('/soat/limpiar-resultado', [SoatController::class, 'limpiarResultado'])->name('limpiar.resultado');
+    Route::post('/soat/limpiar-placa', [SoatController::class, 'limpiarPlaca'])->name('limpiar.placa');
+
+    // 4. QR
+    Route::get('/pago-qr/{placa}', [SoatController::class, 'qr'])->name('qr');  // FIJADO!
+
+    // 5. Compra + Comprobante
+    Route::post('/comprar', [SoatController::class, 'confirmarPago'])->name('comprar');  // POST /soat/comprar
+    Route::get('/soat/espera/{venta_id}', [SoatController::class, 'espera'])->name('espera');
+    // routes/web.php
+    Route::get('/soat/comprobante/{venta_id}', [SoatController::class, 'comprobante'])->name('comprobante');  // GET /soat/comprobante
+    Route::get('/descargar-pdf/{id}', [SoatController::class, 'descargarPdf'])->name('descargar.pdf');  // /soat/descargar-pdf/{id}
+});

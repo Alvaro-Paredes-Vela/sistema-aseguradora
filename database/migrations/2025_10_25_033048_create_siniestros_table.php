@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('siniestros', function (Blueprint $table) {
             $table->id('id_siniestro');
-            $table->unsignedBigInteger('id_poliza');
             $table->date('fecha');
-            $table->time('hora')->nullable();
-            $table->text('descripcion')->nullable();
-            $table->string('ubicacion', 200)->nullable();
-            $table->string('tipo_siniestro', 100)->nullable();
-            $table->decimal('monto_estimado', 12, 2)->nullable();
-            $table->string('estado', 50)->nullable();
-            $table->foreign('id_poliza')->references('id_poliza')->on('policias')->onDelete('cascade');
+            $table->string('descripcion', 450);
+            $table->string('ubicacion', 200);
+            $table->time('hora');
+            $table->decimal('monto_estimado', 10, 2);
+            $table->string('estado', 15);
+            $table->unsignedBigInteger('id_poliza');
+            $table->unsignedBigInteger('id_empleado');
+            $table->foreign('id_poliza')->references('id_poliza')->on('polizas')->onDelete('cascade');
+            $table->foreign('id_empleado')->references('id_empleado')->on('empleados')->onDelete('cascade');
             $table->timestamps();
         });
     }

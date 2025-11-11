@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('modelos', function (Blueprint $table) {
             $table->id('id_modelo');
-            $table->unsignedBigInteger('id_marca');
             $table->string('nombre', 100)->notNullable();
+            $table->unsignedBigInteger('id_marca');
             $table->foreign('id_marca')->references('id_marca')->on('marcas')->onDelete('cascade');
             $table->timestamps();
         });

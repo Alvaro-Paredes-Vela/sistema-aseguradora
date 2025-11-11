@@ -1,3 +1,4 @@
+{{-- resources/views/cliente/verificar-vigencia.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -14,7 +15,7 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
 
-    <!-- Font Awesome para iconos -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -185,13 +186,14 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 0.95rem;
+            text-transform: uppercase;
         }
 
         .btn-verify {
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 50px;
-            padding: 10px 25px;
+            padding: 12px;
             font-weight: 600;
             color: white;
             text-transform: uppercase;
@@ -208,8 +210,7 @@
         .result {
             margin-top: 1.5rem;
             padding: 1rem;
-            border-radius: 5px;
-            display: none;
+            border-radius: 8px;
         }
 
         .result.success {
@@ -222,6 +223,23 @@
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            padding: 10px;
+            background: #10b981;
+            color: white;
+            text-align: center;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download-btn:hover {
+            background: #059669;
         }
 
         /* Footer */
@@ -243,7 +261,6 @@
             text-decoration: underline;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .logo {
                 width: 50px;
@@ -271,7 +288,7 @@
 </head>
 
 <body>
-    <!-- Header con logo y botón -->
+    <!-- Header con logo y botón (ESTILO ORIGINAL INTACTO) -->
     <header class="header">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="logo-container">
@@ -292,18 +309,39 @@
         <div class="container">
             <div class="verify-title">
                 <h1>Verificar Vigencia</h1>
-                <p>Ingresa los datos de tu SOAT para verificar su estado actual.</p>
+                <p>Ingresa <strong>tu placa</strong> o <strong>RUAT</strong> (solo uno es necesario)</p>
             </div>
 
             <div class="verify-container">
-                <form id="verifyForm" class="verify-form">
-                    <div class="form-group">
-                        <label for="policyNumber">Número de Póliza o Placa</label>
-                        <input type="text" id="policyNumber" name="policyNumber" required placeholder="Ej. ABC123">
+                <!-- MENSAJES -->
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                @if (session('poliza'))
+                    <div class="result success">
+                        <strong>SOAT VIGENTE</strong><br>
+                        Válido hasta: <strong>{{ session('poliza.fecha_vencimiento') }}</strong><br>
+                        Vehículo: <strong>{{ session('poliza.vehiculo') }}</strong>
+                        <a href="{{ route('soat.comprobante', session('poliza.id_venta')) }}" class="download-btn">
+                            Descargar Póliza PDF
+                        </a>
                     </div>
-                    <button type="submit" class="btn-verify">Verificar</button>
+                @endif
+
+                <!-- FORMULARIO -->
+                <form action="{{ route('soat.verificar') }}" method="POST" class="verify-form">
+                    @csrf
+                    <div class="form-group">
+                        <label for="busqueda">Placa o RUAT</label>
+                        <input type="text" id="busqueda" name="busqueda" required
+                            placeholder="Ej. 5842BNY o RUAT-ABC-123456" value="{{ old('busqueda') }}">
+                        <small class="text-muted">Puedes usar cualquiera de los dos</small>
+                    </div>
+                    <button type="submit" class="btn-verify">
+                        Verificar Vigencia
+                    </button>
                 </form>
-                <div id="result" class="result"></div>
             </div>
         </div>
     </section>
@@ -312,30 +350,10 @@
     <footer>
         <div class="container">
             <p>&copy; 2025 Aseguradora Pankej. Todos los derechos reservados. |
-                <a href="#">Términos y Condiciones</a> |
-                <a href="#">Política de Privacidad</a>
+                <a href="#">Términos</a> | <a href="#">Privacidad</a>
             </p>
+        </div>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        document.getElementById('verifyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const policyNumber = document.getElementById('policyNumber').value;
-            const resultDiv = document.getElementById('result');
-
-            // Simulación de verificación (reemplazar con llamada a backend)
-            if (policyNumber.toLowerCase() === 'abc123') {
-                resultDiv.className = 'result success';
-                resultDiv.textContent = 'El SOAT está vigente hasta 31/12/2025.';
-            } else {
-                resultDiv.className = 'result error';
-                resultDiv.textContent = 'No se encontró un SOAT válido con ese número.';
-            }
-            resultDiv.style.display = 'block';
-        });
-    </script>
 </body>
 
 </html>

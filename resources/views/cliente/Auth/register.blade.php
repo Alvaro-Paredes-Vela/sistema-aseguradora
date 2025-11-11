@@ -304,7 +304,7 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('clientes.store') }}">
+        <form method="POST" action="{{ route('cliente.register') }}">
             @csrf
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -392,7 +392,7 @@
             </div>
             <button type="submit" class="btn btn-register w-100">Registrarse</button>
         </form>
-        <p class="mt-3">¿Ya tienes cuenta? <a href="{{ route('login') }}" class="login-link">Inicia
+        <p class="mt-3">¿Ya tienes cuenta? <a href="{{ route('cliente.login') }}" class="login-link">Inicia
                 sesión
                 ahora</a></p>
     </div>

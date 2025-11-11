@@ -18,6 +18,8 @@ return new class extends Migration
             $table->decimal('monto_min', 12, 2)->nullable();
             $table->decimal('monto_max', 12, 2)->nullable();
             $table->text('descripcion')->nullable();
+            $table->unsignedBigInteger('id_siniestro');
+            $table->foreign('id_siniestro')->references('id_siniestro')->on('siniestros')->onDelete('cascade');
             $table->timestamps();
         });
     }

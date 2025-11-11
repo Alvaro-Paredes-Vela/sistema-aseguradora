@@ -319,7 +319,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <form method="POST" action="{{ route('clientes.authenticate') }}">
+            <form method="POST" action="{{ route('cliente.authenticate') }}">
                 @csrf
                 <div class="mb-4 text-start">
                     <label for="login" class="form-label">Usuario (Login)</label>
@@ -341,7 +341,7 @@
                 </div>
                 <button type="submit" class="btn btn-login w-100">Iniciar Sesión</button>
             </form>
-            <p class="mt-3">¿No tienes cuenta? <a href="{{ route('register.cliente') }}"
+            <p class="mt-3">¿No tienes cuenta? <a href="{{ route('cliente.register') }}"
                     class="register-link">Regístrate
                     ahora</a></p>
         @endif

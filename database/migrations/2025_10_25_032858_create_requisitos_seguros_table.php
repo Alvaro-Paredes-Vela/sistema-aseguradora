@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('requisitos_seguros', function (Blueprint $table) {
+            $table->char('obligatorio', 1);
             $table->unsignedBigInteger('id_seguro');
             $table->unsignedBigInteger('id_requisito');
             $table->primary(['id_seguro', 'id_requisito']);

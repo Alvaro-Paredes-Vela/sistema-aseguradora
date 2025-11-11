@@ -319,24 +319,24 @@
                             @if (Session::has('cliente_id'))
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2"
-                                        href="{{ route('clientes.edit', Session::get('cliente_id')) }}">
+                                        href="{{ route('cliente.perfil', Session::get('cliente_id')) }}">
                                         <i class="fas fa-user me-1"></i>Perfil
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('clientes.logout') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.logout') }}">
                                         <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
                                     </a>
                                 </li>
                             @else
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('login') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.login') }}">
                                         <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2"
-                                        href="{{ route('register.cliente') }}">
+                                        href="{{ route('cliente.register') }}">
                                         <i class="fas fa-user-shield me-1"></i>Registrarme
                                     </a>
                                 </li>
@@ -380,7 +380,7 @@
                             @endif
                         </div>
                         <!-- Formulario de Actualización -->
-                        <form action="{{ route('clientes.update', $cliente->id_cliente) }}" method="POST"
+                        <form action="{{ route('cliente.update', $cliente->id_cliente) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -447,7 +447,7 @@
                             </div>
                         </form>
                         <!-- Formulario de Eliminación -->
-                        <form action="{{ route('clientes.destroy', $cliente->id_cliente) }}" method="POST"
+                        <form action="{{ route('cliente.destroy', $cliente->id_cliente) }}" method="POST"
                             class="mt-3 d-flex justify-content-center">
                             @csrf
                             @method('DELETE')

@@ -1,10 +1,11 @@
+{{-- resources/views/cliente/Comprar-Soat/comprobar-soat.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Comprobante Digital - Aseguradora Pankej</title>
+    <title>Comprobante Digital - Aseguradora Pankej</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,7 +15,7 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
 
-    <!-- Font Awesome para iconos -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -83,6 +84,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 0.95rem;
+            text-transform: uppercase;
         }
 
         .btn-login {
@@ -108,10 +110,15 @@
             font-size: 0.9rem;
             text-align: center;
             margin-top: 1rem;
-            display: none;
         }
 
-        /* Responsive */
+        .success-message {
+            color: #10b981;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
         @media (max-width: 768px) {
             .login-container {
                 padding: 1.5rem;
@@ -127,48 +134,41 @@
 <body>
     <div class="login-container">
         <div class="login-title">
-            <h1>Iniciar Sesión</h1>
-            <p>Ingresa tus datos para acceder a tu comprobante digital.</p>
+            <h1>Comprobante SOAT</h1>
+            <p>Ingresa tu RUAT y placa para descargar tu póliza digital.</p>
         </div>
 
-        <form id="loginForm" class="login-form">
+        @if (session('error'))
+            <div class="error-message">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="success-message">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <form action="{{ route('soat.comprobar') }}" method="POST" class="login-form">
+            @csrf
             <div class="form-group">
-                <label for="plateNumber">Número de Placa</label>
-                <input type="text" id="plateNumber" name="plateNumber" required placeholder="Ej. ABC123">
+                <label for="ruat">RUAT</label>
+                <input type="text" id="ruat" name="ruat" required placeholder="Ej. RUAT-ABC-123456"
+                    value="{{ old('ruat') }}">
             </div>
             <div class="form-group">
-                <label for="gestor">Gestor</label>
-                <input type="text" id="gestor" name="gestor" required placeholder="Ej. 12345">
+                <label for="placa">Número de Placa</label>
+                <input type="text" id="placa" name="placa" required placeholder="Ej. 5842BNY"
+                    value="{{ old('placa') }}">
             </div>
-            <div class="form-group">
-                <label for="securityCode">Código de Seguridad</label>
-                <input type="text" id="securityCode" name="securityCode" required placeholder="Ej. X7K9P2">
-            </div>
-            <button type="submit" class="btn-login">Iniciar Sesión</button>
-            <div id="errorMessage" class="error-message"></div>
+            <button type="submit" class="btn-login">
+                <i class="fas fa-search"></i> Buscar SOAT
+            </button>
         </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const plateNumber = document.getElementById('plateNumber').value;
-            const gestor = document.getElementById('gestor').value;
-            const securityCode = document.getElementById('securityCode').value;
-            const errorMessage = document.getElementById('errorMessage');
-
-            // Simulación de validación (reemplazar con llamada a backend)
-            if (plateNumber === 'ABC123' && gestor === '12345' && securityCode === 'X7K9P2') {
-                // Redirigir a la vista del comprobante (ajustar ruta según backend)
-                window.location.href = '{{ route('comprobante.digital') }}';
-            } else {
-                errorMessage.textContent = 'Datos incorrectos. Verifica tu placa, gestor o código de seguridad.';
-                errorMessage.style.display = 'block';
-            }
-        });
-    </script>
 </body>
 
 </html>

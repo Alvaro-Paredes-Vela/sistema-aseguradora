@@ -55,4 +55,18 @@ class Empleado extends Authenticatable
             $this->attributes['clave'] = bcrypt($value);
         }
     }
+
+    // Relaciones (uno a muchos inversas)
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class, 'id_empleado', 'id_empleado');
+    }
+    public function siniestros()
+    {
+        return $this->hasMany(Siniestro::class, 'id_empleado', 'id_empleado');
+    }
+    public function reclamos()
+    {
+        return $this->hasMany(Reclamo::class, 'id_empleado', 'id_empleado');
+    }
 }

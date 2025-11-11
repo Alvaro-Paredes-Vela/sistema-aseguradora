@@ -353,19 +353,19 @@
                                     <span class="nav-link">BIENVENIDO: {{ Session::get('cliente_nombre') }}</span>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('clientes.logout') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.logout') }}">
                                         <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
                                     </a>
                                 </li>
                             @else
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('login') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.login') }}">
                                         <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2"
-                                        href="{{ route('register.cliente') }}">
+                                        href="{{ route('cliente.register') }}">
                                         <i class="fas fa-user-shield me-1"></i>Registrarme
                                     </a>
                                 </li>
@@ -428,7 +428,9 @@
                             <i class="fas fa-dollar-sign"></i>
                         </div>
                         <h3>Precios SOAT</h3>
-                        <p>Consulta nuestros precios competitivos y planes personalizados para tu vehículo.</p>
+                        <p>Consulta nuestros precios competitivos y planes personalizados por tipo de vehículo, uso y
+                            departamento.</p>
+                        <a href="{{ route('cliente.soat.precios') }}" class="btn btn-primary-custom mt-3">Precios</a>
                     </div>
                 </div>
 
@@ -468,7 +470,7 @@
                         <h3>Modificar Datos</h3>
                         <p>Actualiza fácilmente la información de tu póliza cuando lo necesites en el momento.</p>
                         @if (Session::has('cliente_id'))
-                            <a href="{{ route('clientes.edit', Session::get('cliente_id')) }}"
+                            <a href="{{ route('cliente.perfil', Session::get('cliente_id')) }}"
                                 class="btn btn-primary-custom mt-3">Editar</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary-custom mt-3 disabled"
@@ -505,7 +507,7 @@
                         </div>
                         <h3>Compra tu SOAT</h3>
                         <p>Adquiere tu SOAT en línea de forma rápida y segura con nuestros métodos de pago.</p>
-                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Comprar</a>
+                        <a href="{{ route('soat.buscar.form') }}" class="btn btn-primary-custom mt-3">Comprar</a>
                     </div>
                 </div>
 

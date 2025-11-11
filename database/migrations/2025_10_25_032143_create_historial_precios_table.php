@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('historial_precios', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_seguro');
             $table->date('fecha');
             $table->decimal('precio', 10, 2);
+            $table->unsignedBigInteger('id_seguro');
             $table->foreign('id_seguro')->references('id_seguro')->on('seguros')->onDelete('cascade');
             $table->timestamps();
         });

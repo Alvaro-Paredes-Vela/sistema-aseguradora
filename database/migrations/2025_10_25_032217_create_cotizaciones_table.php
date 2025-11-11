@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('cotizaciones', function (Blueprint $table) {
             $table->id('id_cotizacion');
-            $table->unsignedBigInteger('id_seguro');
-            $table->string('placa', 15);
             $table->decimal('precio_total', 12, 2);
             $table->decimal('cuota_inicial', 12, 2)->nullable();
             $table->date('fecha')->default(\Carbon\Carbon::now());
             $table->integer('total_subcuotas')->nullable();
             $table->float('subcuotas')->nullable();
+            $table->unsignedBigInteger('id_vehiculo');
+            $table->unsignedBigInteger('id_seguro');
+            $table->foreign('id_vehiculo')->references('id_vehiculo')->on('vehiculos')->onDelete('cascade');
             $table->foreign('id_seguro')->references('id_seguro')->on('seguros')->onDelete('cascade');
-            $table->foreign('placa')->references('placa')->on('vehiculos')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -13,11 +13,19 @@ return new class extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id('id_venta');
+            $table->date('fecha');
             $table->unsignedBigInteger('id_cliente');
-            $table->string('placa', 15);
-            $table->date('fecha')->default(\Carbon\Carbon::now());
+            $table->unsignedBigInteger('id_empleado');
+            $table->unsignedBigInteger('id_vehiculo');
+            $table->unsignedBigInteger('id_seguro');
+            $table->unsignedBigInteger('id_cotizacion')->nullable();
+            $table->decimal('monto_total', 10, 2);
+
             $table->foreign('id_cliente')->references('id_cliente')->on('clientes')->onDelete('cascade');
-            $table->foreign('placa')->references('placa')->on('vehiculos')->onDelete('cascade');
+            $table->foreign('id_empleado')->references('id_empleado')->on('empleados')->onDelete('cascade');
+            $table->foreign('id_vehiculo')->references('id_vehiculo')->on('vehiculos')->onDelete('cascade');
+            $table->foreign('id_seguro')->references('id_seguro')->on('seguros')->onDelete('cascade');
+            $table->foreign('id_cotizacion')->references('id_cotizacion')->on('cotizaciones')->onDelete('cascade');
             $table->timestamps();
         });
     }

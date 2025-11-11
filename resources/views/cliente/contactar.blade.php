@@ -8,13 +8,9 @@
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
-
-    <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -37,7 +33,6 @@
             flex-direction: column;
         }
 
-        /* Header con logo y botón */
         .header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -72,6 +67,7 @@
             box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
             position: relative;
             overflow: hidden;
+            transition: transform 0.4s ease;
         }
 
         .logo::before {
@@ -121,7 +117,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            margin-left: 1rem;
         }
 
         .btn-back:hover {
@@ -129,7 +124,6 @@
             box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
         }
 
-        /* Sección principal */
         .contact-section {
             flex: 1;
             padding: 4rem 0;
@@ -177,7 +171,8 @@
             min-width: 300px;
         }
 
-        .contact-info h3 {
+        .contact-info h3,
+        .contact-form h3 {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
             color: var(--primary-color);
@@ -194,49 +189,51 @@
             margin-right: 0.5rem;
         }
 
-        .contact-form h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            color: var(--primary-color);
+        .form-group {
             margin-bottom: 1.5rem;
         }
 
-        .contact-form .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .contact-form label {
+        .form-group label {
             font-weight: 600;
             color: #333;
             margin-bottom: 0.5rem;
             display: block;
         }
 
-        .contact-form input,
-        .contact-form textarea {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 0.95rem;
+            transition: border 0.3s ease;
         }
 
-        .contact-form textarea {
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
         }
 
         .btn-submit {
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 50px;
-            padding: 10px 25px;
+            padding: 12px 25px;
             font-weight: 600;
             color: white;
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
             width: 100%;
+            font-size: 1rem;
         }
 
         .btn-submit:hover {
@@ -244,7 +241,13 @@
             box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
         }
 
-        /* Footer */
+        .alert {
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
         footer {
             background: var(--dark-color);
             color: white;
@@ -263,7 +266,6 @@
             text-decoration: underline;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .logo {
                 width: 50px;
@@ -287,16 +289,12 @@
             .contact-form {
                 min-width: 100%;
             }
-
-            .btn-back {
-                margin-left: 0;
-            }
         }
     </style>
 </head>
 
 <body>
-    <!-- Header con logo y botón -->
+    <!-- Header -->
     <header class="header">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="logo-container">
@@ -322,6 +320,7 @@
             </div>
 
             <div class="contact-container">
+                <!-- Información de contacto -->
                 <div class="contact-info">
                     <h3>Información de Contacto</h3>
                     <p><i class="fas fa-phone icon"></i> Teléfono: +591 693-348-68</p>
@@ -329,23 +328,60 @@
                     <p><i class="fas fa-map-marker-alt icon"></i> Dirección: MP6J+HJP Urkupiña, Av. Circunvalacion
                         Noroeste, Montero</p>
                 </div>
+
+                <!-- Formulario -->
                 <div class="contact-form">
                     <h3>Envíanos tu Mensaje</h3>
-                    {{--  <form action="{{ route('contact.submit') }}" method="POST"> --}}
-                    @csrf
-                    <div class="form-group">
-                        <label for="name">Nombre</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Mensaje</label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn-submit">Enviar</button>
+
+                    <!-- Mensaje de éxito -->
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <!-- Errores de validación -->
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li><i class="fas fa-exclamation-triangle"></i> {{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <!-- Formulario -->
+                    <form action="{{ route('reclamos.store') }}" method="POST">
+                        @csrf
+
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" required>
+                            @error('nombre')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mensaje">Mensaje</label>
+                            <textarea id="mensaje" name="mensaje" required>{{ old('mensaje') }}</textarea>
+                            @error('mensaje')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                        </button>
                     </form>
                 </div>
             </div>
@@ -359,18 +395,20 @@
                 <a href="#">Términos y Condiciones</a> |
                 <a href="#">Política de Privacidad</a>
             </p>
+        </div>
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Animación del logo
         const logo = document.querySelector('.logo');
-        logo.addEventListener('mouseenter', function() {
-            this.style.transform = 'rotate(360deg) scale(1.1)';
+        logo.addEventListener('mouseenter', () => {
+            logo.style.transform = 'rotate(360deg) scale(1.1)';
         });
-        logo.addEventListener('mouseleave', function() {
-            this.style.transform = 'rotate(0deg) scale(1)';
+        logo.addEventListener('mouseleave', () => {
+            logo.style.transform = 'rotate(0deg) scale(1)';
         });
     </script>
 </body>

@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('polizas', function (Blueprint $table) {
             $table->id('id_poliza');
+            $table->string('numero_poliza', 30)->nullable();
+            $table->date('fecha_emision');
+            $table->date('fecha_vencimiento');
+            $table->string('estado', 15);
+            $table->unsignedBigInteger('id_vehiculo');
             $table->unsignedBigInteger('id_seguro');
-            $table->string('placa', 15);
-            $table->string('numero_poliza', 50)->unique();
-            $table->date('fecha_emision')->default(\Carbon\Carbon::now());
-            $table->date('fecha_vencimiento')->nullable();
-            $table->string('estado', 20)->default('vigente');
+            $table->unsignedBigInteger('id_venta');
+            $table->foreign('id_vehiculo')->references('id_vehiculo')->on('vehiculos')->onDelete('cascade');
             $table->foreign('id_seguro')->references('id_seguro')->on('seguros')->onDelete('cascade');
-            $table->foreign('placa')->references('placa')->on('vehiculos')->onDelete('cascade');
+            $table->foreign('id_venta')->references('id_venta')->on('ventas')->onDelete('cascade');
             $table->timestamps();
         });
     }

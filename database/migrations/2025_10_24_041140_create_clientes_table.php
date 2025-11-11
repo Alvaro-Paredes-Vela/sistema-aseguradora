@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->id('id_cliente');
-            $table->string('login', 50)->unique()->notNullable();
-            $table->string('password', 120);
+            $table->string('CI', 30)->nullable();
+            $table->string('login', 50)->nullable();
+            $table->string('password', 120)->nullable();
             $table->string('correo', 100)->nullable();
             $table->string('nombre', 50);
             $table->string('paterno', 50);

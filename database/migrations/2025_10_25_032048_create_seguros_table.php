@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('seguros', function (Blueprint $table) {
             $table->id('id_seguro');
-            $table->unsignedBigInteger('id_tipo_seguro');
-            $table->unsignedBigInteger('id_categoria')->nullable();
             $table->string('nombre', 100)->nullable();
             $table->integer('vigencia')->nullable();
             $table->decimal('precio', 10, 2)->nullable();
-            $table->foreign('id_tipo_seguro')->references('id_tipo_seguro')->on('tipos_seguro')->onDelete('cascade');
-            $table->foreign('id_categoria')->references('id_categoria')->on('categorias')->onDelete('set null');
+
+            $table->unsignedBigInteger('id_categoria');
+            $table->unsignedBigInteger('id_tipo');
+            $table->foreign('id_categoria')->references('id_categoria')->on('categorias')->onDelete('cascade');
+            $table->foreign('id_tipo')->references('id_tipo')->on('tipos_seguro')->onDelete('cascade');
             $table->timestamps();
         });
     }
