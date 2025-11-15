@@ -178,7 +178,13 @@
                         @if (session('soat_vigente'))
                             <div class="alert alert-vigente">
                                 <div><strong>SOAT VIGENTE</strong></div>
-                                <div>Hasta el <strong>{{ session('soat_vencimiento') }}</strong></div>
+                                <div>Hasta el @php
+                                    $fecha = \Carbon\Carbon::hasFormat(session('soat_vencimiento'), 'd/m/Y')
+                                        ? \Carbon\Carbon::createFromFormat('d/m/Y', session('soat_vencimiento'))
+                                        : now();
+                                @endphp
+                                    <strong>{{ $fecha->format('d/m/Y') }}</strong>
+                                </div>
                                 <a href="{{ route('soat.poliza.descargar', session('poliza_id')) }}"
                                     class="btn btn-download">
                                     Descargar Comprobante

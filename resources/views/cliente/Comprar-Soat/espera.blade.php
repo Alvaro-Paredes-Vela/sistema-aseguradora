@@ -96,11 +96,21 @@
                     <div class="alert alert-success">
                         <strong>Póliza:</strong> #{{ $poliza->numero_poliza }}<br>
                         <strong>Válida hasta:</strong>
-                        {{ \Carbon\Carbon::createFromFormat('Y-m-d', $poliza->fecha_vencimiento)->format('d/m/Y') }}
+                        {{ \Carbon\Carbon::parse($poliza->fecha_vencimiento)->format('d/m/Y') }}
                     </div>
                     <a href="{{ route('soat.comprobante', $venta->id_venta) }}" class="btn btn-download w-100">
                         <i class="fas fa-file-pdf"></i> Descargar Póliza PDF
-                    </a>
+                    </a><br><br>
+                    <!-- BOTÓN FACTURA (NUEVO) -->
+                    @php
+                        $factura = \App\Models\Factura::where('id_pago', $pago->id_pago)->first();
+                    @endphp
+
+                    @if ($factura)
+                        <a href="{{ route('soat.factura.pdf', $factura->nro_factura) }}" class="btn btn-download w-100">
+                            <i class="fas fa-file-pdf"></i> Descargar Factura
+                        </a>
+                    @endif
                 @elseif($pago && $pago->estado_pago === 'rechazado')
                     <!-- PAGO RECHAZADO -->
                     <div class="mb-4">

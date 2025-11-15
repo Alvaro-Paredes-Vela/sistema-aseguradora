@@ -214,7 +214,7 @@ class ClienteController extends Controller
     {
         if (!$this->authCliente()) return $this->authCliente();
 
-        return view('cliente.automotriz');  // Tu vista automotriz.blade.php
+        return view('cliente.AutoMotrizHome');  // Tu vista automotriz.blade.php
     }
 
     public function cotizarForm()

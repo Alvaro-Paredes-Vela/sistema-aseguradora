@@ -17,7 +17,11 @@ class Factura extends Model
         'monto_iva',
         'descripcion',
         'estado',
-        'id_pago'
+        'id_pago',
+        'razon_social',
+        'codigo_control',
+        'fecha_limite_emision',
+        'son_letras'
     ];
 
     public function pago()

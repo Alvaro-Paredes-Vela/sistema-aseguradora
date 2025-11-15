@@ -318,7 +318,7 @@
             </div>
             <div class="back-button">
                 <a href="{{ route('home') }}" class="btn btn-back">Volver a Inicio</a>
-                <a href="{{ route('Solicitar.agente') }}" class="btn btn-report">Reportar Siniestro</a>
+                <a href="{{ route('contactar') }}" class="btn btn-report">Contactar</a>
             </div>
         </div>
     </header>

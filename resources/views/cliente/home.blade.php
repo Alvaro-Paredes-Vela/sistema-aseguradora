@@ -345,7 +345,8 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('welcome') }}">Inicio</a></li>
                             <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="#precios">Precios</a></li>
+                            <li class="nav-item"><a class="nav-link"
+                                    href="{{ route('cliente.soat.precios') }}">Precios</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('contactar') }}">Contáctanos</a>
                             </li>
                             @if (Session::has('cliente_id'))
@@ -441,6 +442,7 @@
                         </div>
                         <h3>Puntos de Venta</h3>
                         <p>Encuentra nuestros puntos de venta autorizados cerca de ti para mayor conveniencia.</p>
+                        <a href="{{ route('soat.puntos-venta') }}" class="btn btn-primary-custom mt-3">Ubicacion</a>
                     </div>
                 </div>
 
@@ -470,7 +472,7 @@
                         <h3>Modificar Datos</h3>
                         <p>Actualiza fácilmente la información de tu póliza cuando lo necesites en el momento.</p>
                         @if (Session::has('cliente_id'))
-                            <a href="{{ route('cliente.perfil', Session::get('cliente_id')) }}"
+                            <a href="{{ route('soat.poliza.actualizar.form') }}"
                                 class="btn btn-primary-custom mt-3">Editar</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary-custom mt-3 disabled"

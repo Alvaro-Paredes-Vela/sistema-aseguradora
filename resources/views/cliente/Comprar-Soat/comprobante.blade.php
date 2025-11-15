@@ -300,15 +300,22 @@
                     <strong>Monto:</strong>
                     <span class="highlight">Bs. {{ number_format($pago->monto) }}</span>
                 </div>
+                {{-- FECHA EMISIÓN --}}
                 <div class="info-item">
                     <i class="bi bi-calendar-check"></i>
                     <strong>Emisión:</strong>
-                    <span>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $poliza->fecha_emision)->format('d/m/Y') }}</span>
+                    <span>
+                        {{ \Carbon\Carbon::parse($poliza->fecha_emision)->format('d/m/Y') }}
+                    </span>
                 </div>
+
+                {{-- FECHA VENCIMIENTO --}}
                 <div class="info-item">
                     <i class="bi bi-calendar-x"></i>
                     <strong>Vence:</strong>
-                    <span>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $poliza->fecha_vencimiento)->format('d/m/Y') }}</span>
+                    <span>
+                        {{ \Carbon\Carbon::parse($poliza->fecha_vencimiento)->format('d/m/Y') }}
+                    </span>
                 </div>
                 <div class="info-item">
                     <i class="bi bi-patch-check"></i>

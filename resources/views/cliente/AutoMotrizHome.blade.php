@@ -361,13 +361,13 @@
                                     <span class="nav-link">BIENVENIDO: {{ Session::get('cliente_nombre') }}</span>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('clientes.logout') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.logout') }}">
                                         <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
                                     </a>
                                 </li>
                             @else
                                 <li class="nav-item">
-                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('login') }}">
+                                    <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('cliente.login') }}">
                                         <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
                                     </a>
                                 </li>

@@ -10,6 +10,7 @@ use App\Http\Controllers\ReclamoController;
 use App\Http\Controllers\SoatController;
 use App\Http\Controllers\VehiculoController;
 use App\Http\Controllers\TipoSeguroController;
+use App\Http\Controllers\PolizaController;
 use App\Http\Controllers\PagoPendienteController;
 
 // === PÁGINA PRINCIPAL (pública) ===
@@ -210,6 +211,18 @@ Route::prefix('soat')->name('soat.')->group(function () {
     Route::get('/verificar-vigencia', [SoatController::class, 'verificarForm'])->name('verificar.form');
     Route::post('/verificar-vigencia', [SoatController::class, 'verificar'])->name('verificar');
 
+    Route::get('/soat/poliza/{id}/descargar', [SoatController::class, 'descargarPoliza'])->name('poliza.descargar');
+    Route::get('/soat/poliza/{id}/descargar_Poliza', [SoatController::class, 'descargarPolizaVigente'])
+        ->name('poliza');
+
+    // routes/web.php
+    Route::get('/factura/{nro}/pdf', [SoatController::class, 'descargarFactura'])
+        ->name('factura.pdf');
+
+    Route::get('/soat/puntos-venta', function () {
+        return view('cliente.Comprar-Soat.puntos-venta');
+    })->name('puntos-venta');
+
     // 1. Búsqueda
     Route::get('/buscar', [SoatController::class, 'buscarForm'])->name('buscar.form');
     Route::post('/buscar', [SoatController::class, 'buscar'])->name('buscar');
@@ -235,4 +248,19 @@ Route::prefix('soat')->name('soat.')->group(function () {
     // routes/web.php
     Route::get('/soat/comprobante/{venta_id}', [SoatController::class, 'comprobante'])->name('comprobante');  // GET /soat/comprobante
     Route::get('/descargar-pdf/{id}', [SoatController::class, 'descargarPdf'])->name('descargar.pdf');  // /soat/descargar-pdf/{id}
+
 });
+
+
+// BUSCAR Y ACTUALIZAR PÓLIZA
+// 1. MOSTRAR FORMULARIO DE BÚSQUEDA (GET)
+Route::get('/soat/poliza/actualizar', [PolizaController::class, 'buscarPolizaForm'])
+    ->name('soat.poliza.actualizar.form');
+
+// 2. BUSCAR PÓLIZA POR PLACA (POST)
+Route::get('/soat/poliza/buscar', [PolizaController::class, 'buscarPoliza'])
+    ->name('soat.poliza.buscar');
+
+// 3. ACTUALIZAR PÓLIZA (PUT)
+Route::put('/soat/poliza/{id}', [PolizaController::class, 'actualizarPoliza'])
+    ->name('soat.poliza.actualizar');

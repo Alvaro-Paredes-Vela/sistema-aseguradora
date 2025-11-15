@@ -256,7 +256,7 @@
                     </div>
 
                     <div class="precio-previo" id="precio-previo">
-                        <i class="fas fa-coins"></i> Precio SOAT: Bs <span id="monto">0</span>
+                        <i class="fas fa-coins"></i> Precio SOAT: Bs <span id="monto"></span>
                     </div>
 
                     <hr class="my-4">
@@ -395,8 +395,8 @@
         };
 
         function ajustarPorRegion(precio, region) {
-            if (region === 'santa_cruz') return precio * 0.98;
-            if (['la_paz', 'cochabamba'].includes(region)) return precio * 1.1;
+            if (region === 'santa_cruz') return precio * 1;
+            if (['la_paz', 'cochabamba'].includes(region)) return precio * 1;
             return precio;
         }
 

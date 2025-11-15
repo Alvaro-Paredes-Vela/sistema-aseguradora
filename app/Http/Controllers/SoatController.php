@@ -13,11 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
-use chillerlan\QRCode\QRCode;
-use chillerlan\QRCode\QROptions;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 class SoatController extends Controller
@@ -157,8 +153,8 @@ class SoatController extends Controller
 
         $base = $precios[$tipo][$uso] ?? 0;
         return match ($region) {
-            'santa_cruz' => $base * 0.98,
-            'la_paz', 'cochabamba' => $base * 1.1,
+            'santa_cruz' => $base * 1,
+            'la_paz', 'cochabamba' => $base * 1,
             default => $base,
         };
     }
@@ -364,12 +360,12 @@ class SoatController extends Controller
         // 2. GENERAR REFERENCIA ÚNICA
         $referencia = 'SOAT-' . $venta->id_venta . '-' . strtoupper(substr(md5($venta->id_venta . now()), 0, 6));
 
-        // 3. CREAR REGISTRO EN TABLA `pagos`
+
 
         // EL MONTO YA ESTÁ EN LA VENTA
         $monto = $venta->monto_total;
 
-        Pago::create([
+        $pago = Pago::create([
             'fecha' => now()->toDateString(),
             'monto' => $monto,
             'comprobante' => $path,
@@ -378,7 +374,7 @@ class SoatController extends Controller
             'id_venta' => $venta->id_venta,
             'id_prima' => null, // Ajusta si usas primas
         ]);
-
+        $this->crearFactura($venta, $pago);
         // 4. REDIRIGIR A ESPERA
         return redirect()->route('soat.espera', $venta->id_venta)
             ->with('success', 'Comprobante enviado. Estamos verificando tu pago...');
@@ -460,5 +456,143 @@ class SoatController extends Controller
                 'vehiculo' => $vehiculo->placa . ' - ' . ($vehiculo->modelo?->nombre ?? 'Sin modelo'),
             ]
         ]);
+    }
+
+    public function descargarPoliza($id)
+    {
+        // Cargar póliza con relaciones
+        $poliza = Poliza::with([
+            'vehiculo.cliente',
+            'vehiculo.modelo.marca',
+            'venta.pagos'
+        ])->findOrFail($id);
+
+        // Buscar venta y pago (como en tu comprobante)
+        $venta = $poliza->venta;
+        $pago = $venta->pagos->first();
+
+        // GENERAR PDF CON TU VISTA comprobante
+        $pdf = Pdf::loadView('cliente.Comprar-Soat.comprobante', compact('venta', 'poliza', 'pago'));
+
+        // Configurar
+        $pdf->setPaper('A4', 'portrait');
+
+        // Descargar
+        return $pdf->download("SOAT_{$poliza->numero_poliza}.pdf");
+    }
+
+    public function descargarPolizaVigente($id)
+    {
+        $poliza = Poliza::with(['vehiculo.cliente', 'vehiculo.modelo.marca', 'vehiculo.modelo', 'venta.pagos'])->findOrFail($id);
+        $pago = $poliza->venta->pagos->first();
+
+        return view('cliente.Comprar-Soat.poliza', compact('poliza', 'pago'));
+    }
+
+    private function numeroALetras($numero)
+    {
+        $unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE'];
+        $decenas = ['DIEZ', 'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE', 'DIECISEIS', 'DIECISIETE', 'DIECIOCHO', 'DIECINUEVE'];
+        $veintes = ['VEINTE', 'VEINTI', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
+        $centenas = ['CIENTO', 'DOSCIENTOS', 'TRESCIENTOS', 'CUATROCIENTOS', 'QUINIENTOS', 'SEISCIENTOS', 'SETECIENTOS', 'OCHOCIENTOS', 'NOVECIENTOS'];
+
+        if ($numero == 0) return 'CERO';
+
+        $entero = floor($numero);
+        $palabras = '';
+
+        // MILLONES
+        if ($entero >= 1000000) {
+            $palabras .= $this->numeroALetras($entero / 1000000) . ' MILLONES ';
+            $entero %= 1000000;
+        }
+
+        // MILES
+        if ($entero >= 1000) {
+            if ($entero == 1000) {
+                $palabras .= 'MIL ';
+            } else {
+                $palabras .= $this->numeroALetras(floor($entero / 1000)) . ' MIL ';
+            }
+            $entero %= 1000;
+        }
+
+        // CENTENAS
+        if ($entero >= 100) {
+            $palabras .= $centenas[floor($entero / 100) - 1] . ' ';
+            $entero %= 100;
+            if ($entero == 0) return trim($palabras);
+        }
+
+        // DECENAS Y UNIDADES
+        if ($entero >= 20) {
+            $decena = floor($entero / 10);
+            $unidad = $entero % 10;
+
+            if ($decena == 2 && $unidad > 0) {
+                $palabras .= 'VEINTI' . ($unidad == 1 ? '' : $unidades[$unidad]);
+            } else {
+                $palabras .= $veintes[$decena - 1];
+                if ($unidad > 0) {
+                    $palabras .= ' Y ' . $unidades[$unidad];
+                }
+            }
+            $palabras .= ' ';
+        } elseif ($entero >= 10) {
+            $palabras .= $decenas[$entero - 10] . ' ';
+        } elseif ($entero > 0) {
+            $palabras .= $unidades[$entero] . ' ';
+        }
+
+        return trim($palabras);
+    }
+
+    public function crearFactura($venta, $pago)
+    {
+        $nroFactura = Factura::max('nro_factura') + 1 ?? 1;
+        $monto = $pago->monto;
+
+        // Código de control
+        $codigoControl = strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(2)) . '-' . strtoupper(Str::random(2));
+
+        // Fecha límite
+        $fechaLimite = now();
+
+        $entero = floor($monto);
+        $decimal = round(($monto - $entero) * 100);
+        $sonLetras = ucfirst($this->numeroALetras($entero)) . " CON " . sprintf("%02d", $decimal) . "/100 BOLIVIANOS";
+
+        // Razón social
+        $cliente = $venta->cliente;
+        $razonSocial = trim($cliente->nombre . ' ' . $cliente->paterno . ' ' . $cliente->materno);
+
+        // Descripción
+        $descripcion = "SOAT PLACA " . $venta->vehiculo->placa;
+
+        // CREAR FACTURA
+        return Factura::create([
+            'nro_factura' => $nroFactura,
+            'fecha_emision' => now(),
+            'monto' => $monto,
+            'monto_iva' => 0,
+            'descripcion' => $descripcion,
+            'estado' => 'emitida',
+            'id_pago' => $pago->id_pago,
+            'razon_social' => $razonSocial,
+            'codigo_control' => $codigoControl,
+            'fecha_limite_emision' => $fechaLimite,
+            'son_letras' => $sonLetras,
+        ]);
+    }
+
+    // SoatController.php
+    public function descargarFactura($nro)
+    {
+        $factura = Factura::findOrFail($nro);
+        $venta = Venta::find($factura->pago->id_venta);
+        $poliza = Poliza::where('id_venta', $venta->id_venta)->first();
+
+        $pdf = Pdf::loadView('cliente.Comprar-Soat.factura', compact('factura', 'venta', 'poliza'));
+        return $pdf->download('factura-' . $nro . '.pdf');
     }
 }

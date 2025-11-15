@@ -19,6 +19,11 @@ class Poliza extends Model
         'id_venta'
     ];
 
+    protected $casts = [
+        'fecha_emision' => 'date',
+        'fecha_vencimiento' => 'date', // CLAVE
+    ];
+
     public function vehiculo()
     {
         return $this->belongsTo(Vehiculo::class, 'id_vehiculo', 'id_vehiculo');

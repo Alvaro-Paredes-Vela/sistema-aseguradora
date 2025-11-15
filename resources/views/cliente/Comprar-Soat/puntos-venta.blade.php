@@ -1,21 +1,16 @@
-{{-- resources/views/cliente/verificar-vigencia.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificar Vigencia - Aseguradora Pankej</title>
+    <title>Puntos de Venta SOAT - Aseguradora Pankej</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -38,7 +33,6 @@
             flex-direction: column;
         }
 
-        /* Header con logo y botón */
         .header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -47,9 +41,6 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .logo-container {
@@ -73,6 +64,7 @@
             box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
             position: relative;
             overflow: hidden;
+            transition: transform 0.4s ease;
         }
 
         .logo::before {
@@ -122,7 +114,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            margin-left: 1rem;
+            font-size: 0.9rem;
         }
 
         .btn-back:hover {
@@ -130,20 +122,19 @@
             box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
         }
 
-        /* Sección principal */
-        .verify-section {
+        .map-section {
             flex: 1;
             padding: 4rem 0;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
         }
 
-        .verify-title {
+        .map-title {
             text-align: center;
             margin-bottom: 3rem;
         }
 
-        .verify-title h1 {
+        .map-title h1 {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
             color: white;
@@ -152,97 +143,69 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .verify-title p {
+        .map-title p {
             font-size: 1.1rem;
             color: rgba(255, 255, 255, 0.8);
             max-width: 700px;
             margin: 0 auto;
         }
 
-        .verify-container {
-            max-width: 600px;
+        .map-container {
+            max-width: 1300px;
             margin: 0 auto;
             padding: 0 1rem;
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            height: 600px;
         }
 
-        .verify-form .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .verify-form label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .verify-form input {
+        .map-iframe {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.95rem;
-            text-transform: uppercase;
+            height: 100%;
+            border: 0;
         }
 
-        .btn-verify {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            border-radius: 50px;
-            padding: 12px;
-            font-weight: 600;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .btn-verify:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
-        }
-
-        .result {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            border-radius: 8px;
-        }
-
-        .result.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .result.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .download-btn {
-            display: block;
-            width: 100%;
-            margin-top: 1rem;
-            padding: 10px;
-            background: #10b981;
-            color: white;
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 1rem 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             text-align: center;
-            border-radius: 50px;
+        }
+
+        .info-card h5 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .info-card p {
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .info-card a {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 8px 20px;
+            background: #dc3545;
+            color: white;
             text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
             font-weight: 600;
+            transition: all 0.3s ease;
         }
 
-        .download-btn:hover {
-            background: #059669;
+        .info-card a:hover {
+            background: #c82333;
+            transform: translateY(-2px);
         }
 
-        /* Footer */
         footer {
             background: var(--dark-color);
             color: white;
@@ -262,86 +225,84 @@
         }
 
         @media (max-width: 768px) {
+            .map-title h1 {
+                font-size: 2rem;
+            }
+
+            .map-container {
+                height: 450px;
+                margin: 0 0.5rem;
+                border-radius: 16px;
+            }
+
+            .info-card {
+                margin: 1rem 0.5rem;
+                padding: 1.2rem;
+            }
+
             .logo {
                 width: 50px;
                 height: 50px;
-                font-size: 1.5rem;
             }
 
             .company-name {
                 font-size: 1.2rem;
             }
 
-            .verify-title h1 {
-                font-size: 2rem;
-            }
-
-            .verify-container {
-                padding: 1.5rem;
-            }
-
             .btn-back {
-                margin-left: 0;
+                padding: 8px 18px;
+                font-size: 0.85rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Header con logo y botón (ESTILO ORIGINAL INTACTO) -->
+    <!-- Header -->
     <header class="header">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="logo-container">
                 <div class="logo"></div>
                 <div>
                     <div class="company-name">Aseguradora Pankej</div>
-                    <small class="text-muted">Seguros y Reaseguros Personales</small>
+                    <small class="text-muted">SOAT - Puntos de Venta</small>
                 </div>
             </div>
             <div class="back-button">
                 <a href="{{ route('home') }}" class="btn btn-back">Volver a Inicio</a>
             </div>
         </div>
+        |
     </header>
 
-    <!-- Sección de verificación -->
-    <section class="verify-section">
+    <!-- Sección del Mapa -->
+    <section class="map-section">
         <div class="container">
-            <div class="verify-title">
-                <h1>Verificar Vigencia</h1>
-                <p>Ingresa <strong>tu placa</strong> o <strong>RUAT</strong> (solo uno es necesario)</p>
+            <div class="map-title">
+                <h1>Puntos de Venta SOAT</h1>
+                <p>Vista Satelital</p>
             </div>
 
-            <div class="verify-container">
-                <!-- MENSAJES -->
-                @if (session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
+            <!-- MAPA SATELITAL CON PIN ROJO -->
+            <div class="map-container">
+                <iframe class="map-iframe"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d954.999!2d-63.2684287!3d-17.3385489!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93ee3e96d3f22e9f%3A0x9e0c80e8a775fd3!2sFacultad+Integral+del+Norte+FINOR+UAGRM!5e1!3m2!1ses!2sbo!4v1712345678901"
+                    allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
 
-                @if (session('poliza'))
-                    <div class="result success">
-                        <strong>SOAT VIGENTE</strong><br>
-                        Válido hasta: <strong>{{ session('poliza.fecha_vencimiento') }}</strong><br>
-                        Vehículo: <strong>{{ session('poliza.vehiculo') }}</strong>
-                        <a href="{{ route('soat.poliza', session('poliza.id_venta')) }}" class="download-btn">
-                            Descargar Póliza PDF
-                        </a>
-                    </div>
-                @endif
-
-                <!-- FORMULARIO -->
-                <form action="{{ route('soat.verificar') }}" method="POST" class="verify-form">
-                    @csrf
-                    <div class="form-group">
-                        <label for="busqueda">Placa o RUAT</label>
-                        <input type="text" id="busqueda" name="busqueda" required
-                            placeholder="Ej. 5842BNY o RUAT-ABC-123456" value="{{ old('busqueda') }}">
-                        <small class="text-muted">Puedes usar cualquiera de los dos</small>
-                    </div>
-                    <button type="submit" class="btn-verify">
-                        Verificar Vigencia
-                    </button>
-                </form>
+            <!-- INFO DE FINOR -->
+            <div class="info-card">
+                <h5>Facultad Integral del Norte (FINOR) - UAGRM</h5>
+                <p><i class="fas fa-map-marker-alt text-danger"></i> <strong>MP6J+HJP</strong> - Av. Circunvalación
+                    Noroeste, Urkupiña</p>
+                <p><i class="fas fa-university text-primary"></i> Montero, Santa Cruz, Bolivia</p>
+                <p><i class="fas fa-phone text-success"></i> +591 6 933 4868</p>
+                <p><i class="fas fa-clock text-primary"></i> Lun-Vie: 8:00 - 18:00 | Sáb: 8:00 - 12:00</p>
+                <a href="https://www.google.com/maps/dir//MP6J%2BHJP+Facultad+Integral+del+Norte+FINOR+UAGRM,+Urkupi%C3%B1a,+Av.+Circunvalacion+Noroeste,+Montero/@-17.3385948,-63.2701683,18z/data=!4m16!1m7!3m6!1s0x93ee3e96d3f22e9f:0x9e0c80e8a775fd3!2sFacultad+Integral+del+Norte+FINOR+UAGRM!8m2!3d-17.3385489!4d-63.2684287!16s%2Fg%2F1thvj0d8!4m7!1m0!1m5!1m1!1s0x93ee3e96d3f22e9f:0x9e0c80e8a775fd3!2m2!1d-63.2684287!2d-17.3385489?authuser=0&entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D"
+                    target="_blank">
+                    Cómo llegar
+                </a>
             </div>
         </div>
     </section>
@@ -349,11 +310,14 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2025 Aseguradora Pankej. Todos los derechos reservados. |
-                <a href="#">Términos</a> | <a href="#">Privacidad</a>
+            <p>© 2025 Aseguradora Pankej. Todos los derechos reservados. |
+                <a href="">Términos</a> | <a href="">Privacidad</a>
             </p>
         </div>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

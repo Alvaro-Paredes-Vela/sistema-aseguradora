@@ -45,7 +45,7 @@ class VehiculoController extends Controller
             'anio_fabricacion' => 'required|integer|min:1900|max:' . date('Y'),
             'nro_chasis' => 'nullable|string|max:50',
             // CLIENTE
-            'CI' => 'required|string|max:20|unique:clientes,CI',
+            'CI' => 'required|string|max:20',
             'nombre' => 'required|string|max:100',
             'paterno' => 'required|string|max:100',
             'materno' => 'nullable|string|max:100',
