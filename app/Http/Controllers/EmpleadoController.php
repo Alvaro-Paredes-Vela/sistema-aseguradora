@@ -4,20 +4,92 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Empleado;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class EmpleadoController extends Controller
 {
+    // ESTA ES TU FUNCIÓN PRINCIPAL DEL DASHBOARD (la que ya tenías)
     public function index()
     {
-        // Verificar si el usuario está autenticado
         if (!session('empleado_id')) {
-            return redirect()->route('admin.login')->with('error', 'Debes iniciar sesión.');
+            return redirect()->route('admin.login');
         }
 
-        // Aquí va la lógica para mostrar el dashboard (admin.index)
-        return view('admin.index'); // Asegúrate de tener esta vista
+        $hoy = Carbon::today();
+
+        // === ESTADÍSTICAS PRINCIPALES ===
+        $stats = [
+            'soat_mes' => DB::table('ventas')
+                ->join('seguros', 'ventas.id_seguro', '=', 'seguros.id_seguro')
+                ->join('tipos_seguro', 'seguros.id_tipo', '=', 'tipos_seguro.id_tipo')
+                ->where('tipos_seguro.nombre', 'SOAT')
+                ->whereMonth('ventas.fecha', now()->month)
+                ->whereYear('ventas.fecha', now()->year)
+                ->count(),
+
+            'automotriz_mes' => DB::table('ventas')
+                ->join('seguros', 'ventas.id_seguro', '=', 'seguros.id_seguro')
+                ->join('tipos_seguro', 'seguros.id_tipo', '=', 'tipos_seguro.id_tipo')
+                ->where('tipos_seguro.nombre', 'AUTOMOTRIZ')
+                ->whereMonth('ventas.fecha', now()->month)
+                ->whereYear('ventas.fecha', now()->year)
+                ->count(),
+
+            'ingresos_mes' => DB::table('ventas')
+                ->whereMonth('ventas.fecha', now()->month)
+                ->whereYear('ventas.fecha', now()->year)
+                ->sum('monto_total'),
+
+            'ventas_hoy' => DB::table('ventas')
+                ->whereDate('ventas.fecha', $hoy)
+                ->count(),
+        ];
+
+        // === DETALLES PARA LOS MODALES (todo en una sola consulta eficiente) ===
+        $detalles = [
+            'soat' => DB::table('ventas')
+                ->join('seguros', 'ventas.id_seguro', '=', 'seguros.id_seguro')
+                ->join('tipos_seguro', 'seguros.id_tipo', '=', 'tipos_seguro.id_tipo')
+                ->join('clientes', 'ventas.id_cliente', '=', 'clientes.id_cliente')
+                ->where('tipos_seguro.nombre', 'SOAT')
+                ->whereMonth('ventas.fecha', now()->month)
+                ->select('clientes.nombre', 'clientes.ci', 'ventas.monto_total', 'ventas.fecha')
+                ->latest('ventas.fecha')
+                ->take(20)
+                ->get(),
+
+            'automotriz' => DB::table('ventas')
+                ->join('seguros', 'ventas.id_seguro', '=', 'seguros.id_seguro')
+                ->join('tipos_seguro', 'seguros.id_tipo', '=', 'tipos_seguro.id_tipo')
+                ->join('clientes', 'ventas.id_cliente', '=', 'clientes.id_cliente')
+                ->where('tipos_seguro.nombre', 'AUTOMOTRIZ')
+                ->whereMonth('ventas.fecha', now()->month)
+                ->select('clientes.nombre', 'clientes.ci', 'ventas.monto_total', 'ventas.fecha')
+                ->latest('ventas.fecha')
+                ->take(20)
+                ->get(),
+
+            'hoy' => DB::table('ventas')
+                ->join('clientes', 'ventas.id_cliente', '=', 'clientes.id_cliente')
+                ->join('seguros', 'ventas.id_seguro', '=', 'seguros.id_seguro')
+                ->join('tipos_seguro', 'seguros.id_tipo', '=', 'tipos_seguro.id_tipo')
+                ->whereDate('ventas.fecha', $hoy)
+                ->select('clientes.nombre', 'clientes.ci', 'ventas.monto_total', 'ventas.fecha', 'tipos_seguro.nombre as tipo_seguro')
+                ->latest('ventas.fecha')
+                ->get(),
+
+            'ingresos' => DB::table('ventas')
+                ->whereMonth('ventas.fecha', now()->month)
+                ->whereYear('ventas.fecha', now()->year)
+                ->selectRaw('DATE(fecha) as fecha, COUNT(*) as cantidad, SUM(monto_total) as total')
+                ->groupBy('fecha')
+                ->orderBy('fecha')
+                ->get(),
+        ];
+
+        return view('admin.index', compact('stats', 'detalles'));
     }
 
     public function create()
@@ -31,7 +103,7 @@ class EmpleadoController extends Controller
             'login' => 'required|unique:empleados|max:50',
             'clave' => 'required|max:100',
             'correo' => 'required|email|max:100',
-            'rol' => 'required|max:100',
+            'rol' => 'required|max:1000',
             'contratacion' => 'nullable|date',
             'estado' => 'boolean',
             'nombres' => 'nullable|max:50',
@@ -68,7 +140,7 @@ class EmpleadoController extends Controller
             'login' => 'required|max:50|unique:empleados,login,' . $id_empleado . ',id_empleado',
             'clave' => 'nullable|max:100',
             'correo' => 'required|email|max:100',
-            'rol' => 'required|max:100',
+            'rol' => 'required|max:1000',
             'contratacion' => 'nullable|date',
             'estado' => 'boolean',
             'nombres' => 'nullable|max:50',

@@ -49,32 +49,28 @@ class PagoPendienteController extends Controller
 
         $poliza = Poliza::where('id_venta', $pago->id_venta)->firstOrFail();
 
-        // GENERAR NÚMERO SECUENCIAL
-        $ultimo = Poliza::whereNotNull('numero_poliza')->max('id_poliza') ?? 0;
-        $nuevoNumero = 'SOAT-' . str_pad($ultimo + 1, 6, '0', STR_PAD_LEFT);
+        $ultimo = Poliza::max('id_poliza') ?? 0;
+        $nuevoNumero = 'AUTO-' . str_pad($ultimo + 1, 6, '0', STR_PAD_LEFT);
 
-        // VERIFICAR QUE NO EXISTA
         while (Poliza::where('numero_poliza', $nuevoNumero)->exists()) {
             $ultimo++;
-            $nuevoNumero = 'SOAT-' . str_pad($ultimo + 1, 6, '0', STR_PAD_LEFT);
+            $nuevoNumero = 'AUTO-' . str_pad($ultimo + 1, 6, '0', STR_PAD_LEFT);
         }
 
-        // ACTUALIZAR PÓLIZA EXISTENTE
         $poliza->update([
             'numero_poliza' => $nuevoNumero,
             'fecha_emision' => now(),
             'fecha_vencimiento' => now()->addYear(),
-            'estado' => 'vigente', // CAMBIA 'activa' → 'vigente'
+            'estado' => 'vigente',
         ]);
 
-        // APROBAR PAGO
         $pago->update([
             'estado_pago' => 'confirmado',
             'confirmado_por' => Session::get('empleado_id'),
         ]);
 
         return redirect()->route('admin.index')
-            ->with('success', "Pago aprobado. Póliza #{$poliza->numero_poliza} activada.");
+            ->with('success', "Pago aprobado. Póliza #{$nuevoNumero} activada.");
     }
 
     public function rechazar(Request $request, Pago $pago)
@@ -88,17 +84,17 @@ class PagoPendienteController extends Controller
             return back()->with('error', 'Este pago ya fue procesado.');
         }
 
-        $pago->estado_pago = 'rechazado';
-        $pago->motivo_rechazo = $request->motivo;
-        $pago->save();
+        $pago->update([
+            'estado_pago' => 'rechazado',
+            'motivo_rechazo' => $request->motivo,
+        ]);
 
         if ($pago->comprobante) {
             Storage::disk('public')->delete($pago->comprobante);
-            $pago->comprobante = null;
+            $pago->omprobante = null;
             $pago->save();
         }
 
-        // CAMBIO CLAVE: REDIRECCIONAR A INDEX
         return redirect()->route('admin.index')
             ->with('success', 'Pago rechazado correctamente.');
     }

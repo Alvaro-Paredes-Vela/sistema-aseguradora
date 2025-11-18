@@ -36,7 +36,7 @@ class VehiculoController extends Controller
 
         $request->validate([
             // VEHÍCULO
-            'placa' => 'required|string|max:15|unique:vehiculos,placa',
+            'placa' => 'required|string|max:15',
             'tipo_vehiculo' => 'required|in:motocicleta,automovil,jeep,camioneta,vagoneta,microbus,colectivo,omnibus_flota,tracto_camion,minibus_8,minibus_11,minibus_15,camion_3,camion_18,camion_25',
             'uso_vehiculo' => 'required|in:particular,publico',
             'region' => 'required|in:santa_cruz,la_paz,cochabamba,oruro,potosi,beni,pando,chuquisaca,tarija',

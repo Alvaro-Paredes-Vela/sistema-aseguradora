@@ -332,6 +332,15 @@
 </head>
 
 <body>
+    @php
+        if (!Session::has('cliente_id')) {
+            redirect()
+                ->route('cliente.login')
+                ->with('warning', 'Debes iniciar sesión para acceder al panel automotriz')
+                ->send();
+            exit();
+        }
+    @endphp
     <!-- Header con logo -->
     <header class="header">
         <div class="container">
@@ -373,7 +382,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2"
-                                        href="{{ route('register.cliente') }}">
+                                        href="{{ route('cliente.register') }}">
                                         <i class="fas fa-user-shield me-1"></i>Registrarme
                                     </a>
                                 </li>
@@ -384,6 +393,45 @@
             </nav>
         </div>
     </header>
+
+    {{-- === MENSAJES FLASH (COLOCAR AQUÍ) === --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show position-fixed"
+            style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
+            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+            @if (session('poliza_id'))
+                <a href="{{ route('automotriz.poliza.pdf', session('poliza_id')) }}" class="btn btn-sm btn-light ms-2">
+                    <i class="fas fa-download"></i> Descargar
+                </a>
+            @endif
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if (session('info'))
+        <div class="alert alert-info alert-dismissible fade show position-fixed"
+            style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
+            <i class="fas fa-info-circle me-2"></i> {{ session('info') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if (session('warning'))
+        <div class="alert alert-warning alert-dismissible fade show position-fixed"
+            style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
+            <i class="fas fa-exclamation-triangle me-2"></i> {{ session('warning') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show position-fixed"
+            style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
+            <i class="fas fa-times-circle me-2"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    {{-- === FIN MENSAJES === --}}
 
     <!-- Hero Section -->
     <section class="hero-section" id="inicio">
@@ -415,7 +463,6 @@
             </div>
         </div>
     </section>
-
     <!-- Servicios del Seguro Automotriz -->
     <section class="services-section">
         <div class="container">
@@ -423,53 +470,128 @@
                 <i class="fas fa-car-side text-accent me-3"></i>Servicios del Seguro Automotriz
             </h2>
             <div class="row">
+
+                <!-- 1. COTIZAR -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card service-card">
                         <div class="service-icon">
-                            <i class="fas fa-tools"></i>
+                            <i class="fas fa-calculator"></i>
                         </div>
-                        <h3>Cobertura de Daños</h3>
-                        <p>Reparamos los daños a tu vehículo causados por accidentes o eventos imprevistos.</p>
-                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Cotizar</a>
+                        <h3>Cotizar Seguro</h3>
+                        <p>Ingresa la placa de tu vehículo para cotizar o renovar tu seguro automotriz.</p>
+                        <button class="btn btn-primary-custom mt-3" data-bs-toggle="modal"
+                            data-bs-target="#modalCotizar">
+                            <i class="fas fa-search me-1"></i> Cotizar
+                        </button>
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3>Protección contra Robo</h3>
-                        <p>Cobertura en caso de robo total o parcial de tu vehículo, con indemnización rápida.</p>
-                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Cotizar</a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card service-card">
-                        <div class="service-icon">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <h3>Responsabilidad Civil</h3>
-                        <p>Protección frente a daños a terceros, incluyendo bienes y personas, causados por tu vehículo.
-                        </p>
-                        <a href="{{ route('cliente.cotizar') }}" class="btn btn-primary-custom mt-3">Cotizar</a>
-                    </div>
-                </div>
-
+                <!-- 2. GUÍA SINIESTRO -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card service-card">
                         <div class="service-icon">
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
-                        <h3>Asistencia en Siniestros</h3>
-                        <p>Atención 24/7 para gestionar siniestros, con soporte inmediato y guía especializada.</p>
-                        <a href="{{ route('guia.siniestro') }}" class="btn btn-primary-custom mt-3">Ver Guía</a>
+                        <h3>Guía de Siniestro</h3>
+                        <p>Pasos claros para reportar un accidente y recibir asistencia inmediata.</p>
+                        <a href="{{ route('automotriz.guia-siniestro') }}" class="btn btn-primary-custom mt-3">
+                            <i class="fas fa-book-open me-1"></i> Ver Guía
+                        </a>
                     </div>
                 </div>
+
+                <!-- 3. NORMATIVAS Y LEYES -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <h3>Normativas y Leyes</h3>
+                        <p>Conoce las leyes de tránsito, seguros obligatorios y regulaciones vigentes.</p>
+                        <a href="{{ route('automotriz.normativas') }}" class="btn btn-primary-custom mt-3">
+                            <i class="fas fa-file-alt me-1"></i> Ver
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 4. VIGENCIA -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3>Verificar Vigencia</h3>
+                        <p>Consulta si tu póliza está activa ingresando tu placa para descargarlo.</p>
+                        <button class="btn btn-primary-custom mt-3" data-bs-toggle="modal"
+                            data-bs-target="#modalVigencia">
+                            <i class="fas fa-check-circle me-1"></i> Verificar
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
+
+    <!-- MODAL COTIZAR -->
+    <div class="modal fade" id="modalCotizar" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('automotriz.verificar-placa') }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-car me-2"></i> Cotizar Seguro Automotriz</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Placa del Vehículo</label>
+                            <input type="text" name="placa" class="form-control text-uppercase"
+                                placeholder="Ej: 123ABC" required maxlength="10" style="font-weight: bold;">
+                        </div>
+                        <p class="text-muted small">
+                            <i class="fas fa-info-circle"></i> Si tu vehículo ya está registrado, podrás cotizar o
+                            descargar tu póliza.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="fas fa-search"></i> Buscar Vehículo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL VIGENCIA -->
+    <div class="modal fade" id="modalVigencia" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('automotriz.verificar-vigencia') }}" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-calendar-check me-2"></i> Verificar Vigencia</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Placa del Vehículo</label>
+                            <input type="text" name="placa" class="form-control text-uppercase"
+                                placeholder="Ej: 123ABC" required maxlength="10" style="font-weight: bold;">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="fas fa-check"></i> Verificar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-dark text-white py-4">

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 
 class SoatController extends Controller
@@ -48,6 +49,25 @@ class SoatController extends Controller
 
         $vehiculo = Vehiculo::where('placa', $placa)->first();
 
+        // 2. ¿TIENE SEGURO AUTOMOTRIZ VIGENTE?
+        $tieneAutomotriz = DB::table('polizas')
+            ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
+            ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
+            ->where('seguros.nombre', 'like', '%Automotriz%')
+            ->where('polizas.estado', 'vigente')
+            ->whereDate('polizas.fecha_vencimiento', '>=', now())
+            ->exists();
+
+        // SI TIENE AUTOMOTRIZ → LO MANDO AL HOME CON MENSAJE
+        if ($tieneAutomotriz) {
+            return redirect()->route('home') // o route('automotriz.dashboard') si quieres
+                ->with(
+                    'info',
+                    'Tu vehículo ya cuenta con Seguro Automotriz vigente. ' .
+                        'Sin embargo, recuerda que el SOAT es obligatorio por ley. ' .
+                        '¡Adquiérelo ahora para circular legalmente!'
+                );
+        }
         // === FIJADO: VERIFICA NULL ANTES DE POLIZAS ===
         if (!$vehiculo) {
             return back()
@@ -401,6 +421,25 @@ class SoatController extends Controller
             ->where('placa', $placa)
             ->first();
 
+        $tieneAutomotriz = DB::table('polizas')
+            ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
+            ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
+            ->where('seguros.nombre', 'like', '%Automotriz%')
+            ->where('polizas.estado', 'vigente')
+            ->whereDate('polizas.fecha_vencimiento', '>=', now())
+            ->exists();
+
+        // SI TIENE AUTOMOTRIZ → LO MANDO AL HOME CON MENSAJE
+        if ($tieneAutomotriz) {
+            return redirect()->route('home') // o route('automotriz.dashboard') si quieres
+                ->with(
+                    'info',
+                    'Tu vehículo ya cuenta con Seguro Automotriz vigente. ' .
+                        'Sin embargo, recuerda que el SOAT es obligatorio por ley. ' .
+                        '¡Adquiérelo ahora para circular legalmente!'
+                );
+        }
+
         if (!$vehiculo) {
             return back()->with('error', 'No se encontró un vehículo con esos datos.');
         }
@@ -435,6 +474,25 @@ class SoatController extends Controller
             $query->where('placa', $busqueda)
                 ->orWhere('RUAT', $busqueda);
         })->first();
+
+        $tieneAutomotriz = DB::table('polizas')
+            ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
+            ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
+            ->where('seguros.nombre', 'like', '%Automotriz%')
+            ->where('polizas.estado', 'vigente')
+            ->whereDate('polizas.fecha_vencimiento', '>=', now())
+            ->exists();
+
+        // SI TIENE AUTOMOTRIZ → LO MANDO AL HOME CON MENSAJE
+        if ($tieneAutomotriz) {
+            return redirect()->route('home') // o route('automotriz.dashboard') si quieres
+                ->with(
+                    'info',
+                    'Tu vehículo ya cuenta con Seguro Automotriz vigente. ' .
+                        'Sin embargo, recuerda que el SOAT es obligatorio por ley. ' .
+                        '¡Adquiérelo ahora para circular legalmente!'
+                );
+        }
 
         if (!$vehiculo) {
             return back()->with('error', 'No se encontró un vehículo con esos datos26.');

@@ -12,6 +12,7 @@ use App\Http\Controllers\VehiculoController;
 use App\Http\Controllers\TipoSeguroController;
 use App\Http\Controllers\PolizaController;
 use App\Http\Controllers\PagoPendienteController;
+use App\Http\Controllers\AutomotrizController;
 
 // === PÁGINA PRINCIPAL (pública) ===
 Route::get('/', function () {
@@ -20,6 +21,11 @@ Route::get('/', function () {
 
 // Rutas para la página principal del cliente
 Route::get('/home', [ClienteController::class, 'index'])->name('home');
+
+// Ruta para cargar el menú personalizado (solo para empleados logueados)
+Route::get('/admin/user-menu-partial', function () {
+    return view('partials.adminlte.user-menu');
+})->name('admin.user-menu');
 
 // Rutas para administración (asociadas a empleados)
 Route::get('/admin', [EmpleadoController::class, 'login'])->name('admin.login');
@@ -55,6 +61,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/pagos/rechazados', [PagoPendienteController::class, 'rechazados'])
         ->name('pagos.rechazados');
+
+    Route::get('/admin/detalle/{tipo}', [EmpleadoController::class, 'detalleDashboard'])
+        ->where('tipo', 'soat|automotriz|hoy|ingresos');
 });
 
 // === CLIENTES (público + auth manual) ===
@@ -146,32 +155,6 @@ Route::get('/ComprobanteDigital', function () {
     return view('cliente.Auth.ComprobanteDigital');
 })->name('comprobante.digital');
 
-// Rutas para el cotizador
-Route::get('/cotizar', function () {
-    return view('cliente.cotizar');
-})->name('cliente.cotizar');
-
-Route::post('/cotizar/paso2', function (Request $request) {
-    return view('cliente.cotizar-paso2', [
-        'datosCliente' => $request->only(['nombres', 'apellidos', 'ci', 'email', 'celular', 'direccion'])
-    ]);
-})->name('cotizar.paso2');
-
-Route::post('/cotizar/paso3', function (Request $request) {
-    return view('cliente.cotizar-paso3', [
-        'datosCliente' => $request->only(['nombres', 'apellidos', 'ci', 'email', 'celular', 'direccion']),
-        'tipo_vehiculo' => $request->tipo_vehiculo,
-        'marca' => $request->marca,
-        'anio' => $request->anio,
-        'procedencia' => $request->procedencia,
-        'paquete_km' => $request->paquete_km
-    ]);
-})->name('cotizar.paso3');
-
-Route::post('/cotizar/paso4', function (Request $request) {
-    return view('cliente.cotizar-paso4');
-})->name('cotizar.pdf');
-
 /* AUN NO DEFINIDO .
 Route::post('/cotizar/generar-pdf', function (Request $request) {
     $data = $request->all();
@@ -199,7 +182,10 @@ Route::get('/automotriz', [ClienteController::class, 'automotriz'])->name('autom
 // Rutas para gestión de reclamos
 Route::post('/contactanos', [ReclamoController::class, 'store'])->name('reclamos.store');
 
-/*============================================================================================================*/
+/*==========================================================================================================*/
+/*                                         RUTAS PARA MI SEGURO SOAT                                        */
+/*==========================================================================================================*/
+
 Route::prefix('soat')->name('soat.')->group(function () {
 
     // 0. ruta dashboard soat
@@ -264,3 +250,37 @@ Route::get('/soat/poliza/buscar', [PolizaController::class, 'buscarPoliza'])
 // 3. ACTUALIZAR PÓLIZA (PUT)
 Route::put('/soat/poliza/{id}', [PolizaController::class, 'actualizarPoliza'])
     ->name('soat.poliza.actualizar');
+
+
+
+/*==========================================================================================================*/
+/*                                      RUTAS PARA MI SEGURO AUTOMOTRIZ                                     */
+/*==========================================================================================================*/
+
+// Seguro Automotriz
+Route::prefix('automotriz')->name('automotriz.')->group(function () {
+
+    // Modales
+    Route::post('/verificar-placa', [AutomotrizController::class, 'verificarPlaca'])->name('verificar-placa');
+    Route::post('/verificar-vigencia', [AutomotrizController::class, 'verificarVigencia'])->name('verificar-vigencia');
+    Route::get('/registrar-vehiculo', [AutomotrizController::class, 'registrarVehiculo'])->name('registrar-vehiculo');
+    Route::post('/guardar-paso1', [AutomotrizController::class, 'guardarPaso1'])->name('guardar-paso1');
+    Route::get('/cotizar-paso2', [AutomotrizController::class, 'cotizarPaso2'])->name('cotizar-paso2');
+    Route::post('/confirmar-cotizacion', [AutomotrizController::class, 'confirmarCotizacion'])->name('confirmar-cotizacion');
+    Route::get('/completar-registro', [AutomotrizController::class, 'completarRegistro'])->name('completar-registro');
+
+    Route::get('/guia-siniestro', [AutomotrizController::class, 'guiaSiniestro'])->name('guia-siniestro');
+    Route::get('/normativas', [AutomotrizController::class, 'normativas'])->name('normativas');
+    Route::post('/verificar-vigencia', [AutomotrizController::class, 'verificarVigencia'])->name('verificar-vigencia');
+    Route::post('/guardar-completo', [AutomotrizController::class, 'guardarCompleto'])
+        ->name('guardar-completo');
+
+    Route::get('/automotriz/pago', [AutomotrizController::class, 'pago'])->name('pago');
+    Route::post('/automotriz/subir-comprobante', [AutomotrizController::class, 'subirComprobante'])->name('subir-comprobante');
+    Route::get('/automotriz/espera', [AutomotrizController::class, 'espera'])->name('espera');
+    Route::get('/automotriz/verificar-pago', [AutomotrizController::class, 'verificarPago'])
+        ->name('verificar-pago');
+
+    Route::get('/automotriz/poliza/pdf/{id}', [AutomotrizController::class, 'descargarPoliza'])
+        ->name('poliza.pdf');
+});

@@ -30,6 +30,26 @@ class PolizaController extends Controller
         $placa = strtoupper($request->placa);
         $vehiculo = Vehiculo::where('placa', $placa)->first();
 
+        // 2. ¿TIENE SEGURO AUTOMOTRIZ VIGENTE?
+        $tieneAutomotriz = DB::table('polizas')
+            ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
+            ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
+            ->where('seguros.nombre', 'like', '%Automotriz%')
+            ->where('polizas.estado', 'vigente')
+            ->whereDate('polizas.fecha_vencimiento', '>=', now())
+            ->exists();
+
+        // SI TIENE AUTOMOTRIZ → LO MANDO AL HOME CON MENSAJE
+        if ($tieneAutomotriz) {
+            return redirect()->route('home') // o route('automotriz.dashboard') si quieres
+                ->with(
+                    'info',
+                    'Tu vehículo ya cuenta con Seguro Automotriz vigente. ' .
+                        'Sin embargo, recuerda que el SOAT es obligatorio por ley. ' .
+                        '¡Adquiérelo ahora para circular legalmente!'
+                );
+        }
+
         if (!$vehiculo) {
             return back()->with('error', 'Vehículo no encontrado con placa: ' . $placa);
         }

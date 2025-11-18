@@ -51,8 +51,8 @@
             border-radius: 1.5rem;
             padding: 1.5rem;
             width: 100%;
-            max-width: 700px;
-            /* Ajustado para dos columnas */
+            max-width: 580px;
+            /* ← Más chico como pediste (antes 700px) */
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
             position: relative;
@@ -254,11 +254,10 @@
             color: var(--secondary-color);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .register-card {
-                max-width: 85%;
-                padding: 1rem;
+                max-width: 90%;
+                padding: 1.2rem;
             }
 
             .col-md-6 {
@@ -295,17 +294,23 @@
     <div class="register-card">
         <div class="logo"></div>
         <h1>REGISTRATE Y COMIENZA HOY!</h1>
+
         @if ($errors->any())
             <div class="alert alert-danger">
-                <ul>
+                <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
         @endif
+
         <form method="POST" action="{{ route('cliente.register') }}">
             @csrf
+
+            <!-- Campo oculto para que siempre quede Activo por defecto -->
+            <input type="hidden" name="estado" value="1">
+
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="login" class="form-label">Usuario (Login)</label>
@@ -337,7 +342,7 @@
                 <div class="col-md-6 mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" name="nombre" id="nombre"
-                        class="form-control @error('nombres') is-invalid @enderror" placeholder="Ingresa tu nombre"
+                        class="form-control @error('nombre') is-invalid @enderror" placeholder="Ingresa tu nombre"
                         value="{{ old('nombre') }}">
                     @error('nombre')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -379,23 +384,15 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-6 mb-3 offset-md-3">
-                    <label for="estado" class="form-label">Estado</label>
-                    <select name="estado" id="estado" class="form-control @error('estado') is-invalid @enderror">
-                        <option value="1" {{ old('estado') == 1 ? 'selected' : '' }}>Activo</option>
-                        <option value="0" {{ old('estado') == 0 ? 'selected' : '' }}>Inactivo</option>
-                    </select>
-                    @error('estado')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
             </div>
+
             <button type="submit" class="btn btn-register w-100">Registrarse</button>
         </form>
-        <p class="mt-3">¿Ya tienes cuenta? <a href="{{ route('cliente.login') }}" class="login-link">Inicia
-                sesión
+
+        <p class="mt-3">¿Ya tienes cuenta? <a href="{{ route('cliente.login') }}" class="login-link">Inicia sesión
                 ahora</a></p>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

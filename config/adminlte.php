@@ -133,12 +133,13 @@ return [
     |
     */
 
-    'usermenu_enabled' => true,
+    'usermenu_enabled' => false,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
+
 
     /*
     |--------------------------------------------------------------------------
@@ -320,13 +321,8 @@ return [
             'url' => 'admin/blog',
             'can' => 'manage-blog',
         ],
-        [
-            'text' => 'Precio',
-            'url' => '/Precio',
-            'icon' => 'far fa-fw fa-file',
-            'label' => null,
-            'label_color' => 'success',
-        ],
+
+        /*=============================================================================================*/
 
         [
             'text' => 'Categorías',
@@ -342,7 +338,12 @@ return [
             'url' => '/tipos-seguro',
             'icon' => 'fas fa-shield-alt',
         ],
-
+        // paleta para reclamos
+        [
+            'text' => 'Reclamos',
+            'url' => '/reclamos',
+            'icon' => 'fas fa-file-alt',
+        ],
         [
             'text' => 'Pagos Pendientes',
             'url' => '/admin/pagos-pendientes',  // ← URL DIRECTA
@@ -368,7 +369,7 @@ return [
 
         /*=======================================================================================================*/
 
-
+        /*
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
@@ -434,6 +435,7 @@ return [
             'icon_color' => 'cyan',
             'url' => '#',
         ],
+        */
     ],
 
     /*

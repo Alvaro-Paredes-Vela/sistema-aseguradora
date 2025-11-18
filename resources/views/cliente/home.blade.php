@@ -377,7 +377,40 @@
             </nav>
         </div>
     </header>
+    {{-- MENSAJES FLASH - AGREGAR ESTO (arriba del footer o donde quieras que aparezcan) --}}
+    <div class="container mt-4">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>¡Éxito!</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
 
+        @if (session('info'))
+            <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                {{ session('info') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if (session('warning'))
+            <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Atención:</strong> {{ session('warning') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                <i class="fas fa-times-circle me-2"></i>
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+    </div>
     <!-- Hero Section -->
     <section class="hero-section" id="inicio">
         <div class="container">
@@ -454,7 +487,8 @@
                         <h3>Comprobante Digital</h3>
                         <p>Accede a tu comprobante SOAT y roseta digital de forma inmediata y segura.</p>
                         @if (Session::has('cliente_id'))
-                            <a href="{{ route('login.comprobante') }}" class="btn btn-primary-custom mt-3">Acceder</a>
+                            <a href="{{ route('login.comprobante') }}"
+                                class="btn btn-primary-custom mt-3">Acceder</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary-custom mt-3 disabled"
                                 onclick="alert('Debes iniciar sesión para acceder al comprobante.'); return false;">
@@ -532,6 +566,8 @@
             @endif
         </div>
     </section>
+
+
 
     <!-- Footer -->
     <footer class="bg-dark text-white py-4">

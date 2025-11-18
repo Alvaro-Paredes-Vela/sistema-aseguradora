@@ -4,12 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizar SOAT - Paso 3 - Aseguradora Pankej</title>
+    <title>Cotización Seguro Automotriz - Paso 2</title>
+
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
             --primary-color: #1e3a8a;
@@ -21,7 +26,14 @@
             --light-color: #f8fafc;
         }
 
-        /* HEADER EXACTO DE TU HOME */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* HEADER */
         .header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -98,6 +110,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: white;
         }
 
         .btn-primary-custom:hover {
@@ -106,13 +119,7 @@
             color: white;
         }
 
-        /* STEPPER - EXACTO PASO 1 */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
+        /* STEPPER */
         .step-container {
             background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             min-height: 100vh;
@@ -123,6 +130,7 @@
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
         }
 
         .step-number {
@@ -135,6 +143,7 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            font-size: 1.1rem;
         }
 
         .step-number.active {
@@ -149,27 +158,26 @@
             background: white;
             border-radius: 0 0 20px 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
         }
 
-        /* BOTÓN GENERAR - VISIBLE Y GRANDE */
-        .btn-generar {
-            background: linear-gradient(45deg, var(--accent-color), #ef4444);
+        .btn-continuar {
+            background: var(--success-color);
             border: none;
             border-radius: 50px;
-            padding: 18px 50px;
-            font-weight: 700;
-            font-size: 1.2rem;
+            padding: 15px 40px;
+            font-weight: 600;
             color: white;
             text-transform: uppercase;
             letter-spacing: 1px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
             transition: all 0.3s ease;
         }
 
-        .btn-generar:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.6);
+        .btn-continuar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
             color: white;
         }
 
@@ -186,47 +194,30 @@
             color: var(--primary-color);
         }
 
-        .form-control {
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 12px;
-            font-weight: 500;
-        }
-
-        .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
-        }
-
-        .toggle-section {
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        .alert-precio {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
             border: 2px solid var(--success-color);
             border-radius: 15px;
             padding: 1.5rem;
-            margin: 2rem 0;
             text-align: center;
-        }
-
-        .form-check-input:checked {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-        }
-
-        .form-check-label {
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: var(--success-color);
-            font-size: 1.1rem;
         }
 
         footer {
             background: var(--dark-color);
             color: white;
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 
 <body>
-    <!-- HEADER EXACTO DE TU HOME -->
+
+    <!-- HEADER -->
     <header class="header">
         <div class="container">
             <nav class="navbar navbar-expand-lg">
@@ -243,15 +234,23 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="/cotizar">Cotizar</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#precios">Precios</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#contacto">Contáctanos</a></li>
-                            <li class="nav-item">
-                                <a class="btn btn-primary-custom btn-sm ms-2" href="{{ route('register.cliente') }}">
-                                    <i class="fas fa-user-shield me-1"></i>Registrarme
-                                </a>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('automotriz') }}">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('contactar') }}">Contáctanos</a>
                             </li>
+                            @if (Session::has('cliente_id'))
+                                <li class="nav-item"><span class="nav-link">BIENVENIDO:
+                                        {{ Session::get('cliente_nombre') }}</span></li>
+                                <li class="nav-item"><a class="btn btn-primary-custom btn-sm ms-2"
+                                        href="{{ route('automotriz') }}"><i class="fas fa-sign-out-alt"></i>
+                                        Volver a Inicio</a></li>
+                            @else
+                                <li class="nav-item"><a class="btn btn-primary-custom btn-sm ms-2"
+                                        href="{{ route('cliente.login') }}"><i class="fas fa-sign-in-alt"></i>
+                                        Iniciar</a></li>
+                                <li class="nav-item"><a class="btn btn-primary-custom btn-sm ms-2"
+                                        href="{{ route('register.cliente') }}"><i class="fas fa-user-shield"></i>
+                                        Registrarme</a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -259,94 +258,88 @@
         </div>
     </header>
 
-    <!-- PASO 3 - EXACTO ESTILO PASO 1 -->
+    <!-- PASO 2 -->
     <section class="step-container py-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <!-- STEPPER - EXACTO PASO 1 -->
-                    <div class="step-header py-4">
-                        <div class="text-center">
-                            <div><i class="fas fa-calculator me-2"></i>Cotizador SOAT</div>
-                            <div class="d-flex justify-content-center gap-3 mt-2">
-                                <span class="step-number completed">1</span>
-                                <span class="step-number completed">2</span>
-                                <span class="step-number active">3</span>
-                            </div>
+
+                    <!-- STEPPER -->
+                    <div class="step-header text-center">
+                        <div><i class="fas fa-file-invoice-dollar me-2"></i>Cotización Seguro Automotriz</div>
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <span class="step-number completed">1</span>
+                            <span class="step-number active">2</span>
+                            <span class="step-number">3</span>
                         </div>
                     </div>
 
-                    <div class="step-card p-5">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <button type="button" class="btn btn-volver" onclick="history.back()">
-                                <i class="fas fa-arrow-left me-2"></i>VOLVER
-                            </button>
-                            <h4 class="mb-0"><i class="fas fa-car me-2"></i>Completar Datos del Vehículo</h4>
+                    <!-- CARD -->
+                    <div class="step-card">
+                        <div class="text-center mb-4">
+                            <h4><i class="fas fa-check-circle text-success me-2"></i>¡Cotización Lista!</h4>
+                            <p class="text-muted">Revisa los detalles y confirma para continuar.</p>
                         </div>
 
-                        <form method="POST" action="/cotizar/paso4">
+                        <!-- RESUMEN DATOS -->
+                        <div class="row text-center mb-4 g-3">
+                            <div class="col-md-3">
+                                <strong>Placa</strong><br>
+                                <span class="text-primary fs-5">{{ strtoupper($datos['placa']) }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Valor Comercial</strong><br>
+                                <span class="text-primary">Bs {{ number_format($datos['valor_comercial'], 2) }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Uso</strong><br>
+                                <span class="text-primary">{{ ucfirst($datos['uso_vehiculo']) }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Región</strong><br>
+                                <span class="text-primary">{{ ucwords(str_replace('_', ' ', $datos['region'])) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Tipo de Seguro</strong><br>
+                                <span class="badge bg-info fs-6">
+                                    {{ $datos['tipo_cobertura'] == 'total' ? 'Seguro Total' : 'Seguro a Terceros' }}
+                                </span>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <strong>Prima Anual</strong><br>
+                                <div class="alert-precio">
+                                    Bs {{ number_format($prima) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOTONES -->
+                        <form action="{{ route('automotriz.confirmar-cotizacion') }}" method="POST" class="mt-4">
                             @csrf
-
-                            {{-- DATOS CLIENTE --}}
-                            @foreach ($datosCliente as $key => $value)
-                                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                            @endforeach
-
-                            {{-- DATOS PASO 2 --}}
-                            <input type="hidden" name="tipo_vehiculo" value="{{ $tipo_vehiculo }}">
-                            <input type="hidden" name="marca" value="{{ $marca }}">
-                            <input type="hidden" name="anio" value="{{ $anio }}">
-                            <input type="hidden" name="procedencia" value="{{ $procedencia }}">
-                            <input type="hidden" name="paquete_km" value="{{ $paquete_km }}">
-
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Modelo</label>
-                                    <input type="text" name="modelo" class="form-control" placeholder="Ej: 123wer"
-                                        required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Placa</label>
-                                    <input type="text" name="placa" class="form-control" placeholder="Ej: 345gt"
-                                        required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Color</label>
-                                    <input type="text" name="color" class="form-control" placeholder="Ej: rojo"
-                                        required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">N° Pasajeros</label>
-                                    <input type="number" name="pasajeros" class="form-control" min="1"
-                                        max="10" placeholder="Ej: 2" required>
-                                </div>
-                            </div>
-
-                            <!-- TOGGLE */
-                            <div class="toggle-section">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="bloquear">
-                                    <label class="form-check-label" for="bloquear">
-                                        <i class="fas fa-lock me-2"></i>Bloquear campos autocompletados
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- BOTÓN GENERAR - VISIBLE Y GRANDE -->
-                            <div class="text-center mt-5">
-                                <button type="submit" class="btn btn-generar">
-                                    <i class="fas fa-file-pdf me-2"></i>GENERAR COTIZACIÓN PDF
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-continuar">
+                                    <i class="fas fa-check me-2"></i> Aceptar y Continuar
                                 </button>
                             </div>
                         </form>
+
+                        <div class="text-center mt-3">
+                            <a href="{{ route('automotriz.registrar-vehiculo') }}" class="text-muted small">
+                                <i class="fas fa-edit"></i> Modificar datos del vehículo
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="text-white py-4">
-        <div class="container text-center">
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
             <p>&copy; 2025 Aseguradora Pankej. Todos los derechos reservados.</p>
         </div>
     </footer>

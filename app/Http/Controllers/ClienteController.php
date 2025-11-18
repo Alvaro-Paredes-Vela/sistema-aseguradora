@@ -73,7 +73,7 @@ class ClienteController extends Controller
         $request->validate([
             'login' => 'required|string|unique:clientes,login|max:50',
             'password' => 'required|max:50|',  // confirmed necesita password_confirmation en form
-            'correo' => 'required|email|unique:clientes,correo|max:255',
+            'correo' => 'required|email|max:255',
             'nombre' => 'required|string|max:100',
             'paterno' => 'required|string|max:100',
             'materno' => 'required|string|max:100',
@@ -132,7 +132,7 @@ class ClienteController extends Controller
             'nombre' => 'required|string|max:100',
             'paterno' => 'required|string|max:100',
             'materno' => 'required|string|max:100',
-            'correo' => ['required', 'email', 'max:255', Rule::unique('clientes')->ignore($cliente->id_cliente, 'id_cliente')],
+            'correo' => 'required|email|max:255',
             'telefono' => 'required|string|max:20',
             'direccion' => 'required|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

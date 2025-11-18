@@ -300,11 +300,8 @@
                                 <select name="rol" id="rol" class="form-control" required>
                                     <option value="" disabled selected>Seleccione un rol</option>
                                     <option value="Administrador">Administrador</option>
-                                    <option value="Agente">Agente</option>
-                                    <option value="Gestor">Gestor-Siniestro</option>
-                                    <option value="Contador">Contador</option>
-                                    <option value="Supervisor">Supervisor</option>
-                                    <option value="Soporte">Soporte-Tecnico</option>
+                                    <option value="Agente de Ventas">Agente de Ventas</option>
+                                    <option value="Gestor Siniestro">Gestor Siniestro</option>
                                 </select>
                                 @error('rol')
                                     <div class="text-danger">{{ $message }}</div>

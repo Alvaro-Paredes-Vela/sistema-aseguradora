@@ -357,7 +357,8 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#contacto">Contáctanos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('contactar') }}">Contáctanos</a>
+                            </li>
                             @if (Session::has('cliente_id'))
                                 <li class="nav-item">
                                     <a class="btn btn-primary-custom btn-sm ms-2"
