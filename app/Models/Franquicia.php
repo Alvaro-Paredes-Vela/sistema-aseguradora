@@ -11,15 +11,14 @@ class Franquicia extends Model
 
     protected $fillable = [
         'nombre',
-        'porcentaje_cobertura',
-        'monto_min',
-        'monto_max',
+        'monto',
+        'porcentaje',
         'descripcion',
-        'id_siniestro'
+        'id_poliza'
     ];
 
-    public function siniestro()
+    public function poliza()
     {
-        return $this->belongsTo(Siniestro::class, 'id_siniestro', 'id_siniestro');
+        return $this->belongsTo(Poliza::class, 'id_poliza', 'id_poliza');
     }
 }

@@ -49,51 +49,44 @@ class SoatController extends Controller
 
         $vehiculo = Vehiculo::where('placa', $placa)->first();
 
-        // 2. ¿TIENE SEGURO AUTOMOTRIZ VIGENTE?
-        $tieneAutomotriz = DB::table('polizas')
-            ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
-            ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
-            ->where('seguros.nombre', 'like', '%Automotriz%')
-            ->where('polizas.estado', 'vigente')
-            ->whereDate('polizas.fecha_vencimiento', '>=', now())
-            ->exists();
-
-        // SI TIENE AUTOMOTRIZ → LO MANDO AL HOME CON MENSAJE
-        if ($tieneAutomotriz) {
-            return redirect()->route('home') // o route('automotriz.dashboard') si quieres
-                ->with(
-                    'info',
-                    'Tu vehículo ya cuenta con Seguro Automotriz vigente. ' .
-                        'Sin embargo, recuerda que el SOAT es obligatorio por ley. ' .
-                        '¡Adquiérelo ahora para circular legalmente!'
-                );
-        }
-        // === FIJADO: VERIFICA NULL ANTES DE POLIZAS ===
+        // === SI NO EXISTE EL VEHÍCULO ===
         if (!$vehiculo) {
             return back()
                 ->with('error', 'Vehículo no encontrado. Regístralo primero.')
                 ->with('placa_buscada', $placa);
         }
 
-        // SESSION VEHICULO (para vista)
-        session(['vehiculo' => $vehiculo]);
+        // === VERIFICAR SI TIENE SOAT VIGENTE ===
+        $tieneSoatVigente = DB::table('polizas')
+            ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
+            ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
+            ->where('seguros.nombre', 'SOAT')
+            ->where('polizas.estado', 'vigente')
+            ->whereDate('polizas.fecha_vencimiento', '>=', now())
+            ->exists();
 
-        // VERIFICA SOAT VIGENTE (solo si existe vehículo)
-        $polizaVigente = $vehiculo->polizas()
-            ->where('estado', 'vigente')
-            ->where('fecha_vencimiento', '>', now())
-            ->first();  // Usa first() para datos
-
-        if ($polizaVigente) {
-            return back()
-                ->with('soat_vigente', true)
-                ->with('soat_vencimiento', $polizaVigente->fecha_vencimiento->format('d/m/Y'))
-                ->with('poliza_id', $polizaVigente->id_poliza)
-                ->with('success', '¡SOAT vigente encontrado! Descarga tu póliza.');
+        // === AQUÍ ESTÁ LA CONDICIÓN QUE PEDISTE ===
+        if (!$tieneSoatVigente) {
+            return redirect()->route('soat.vehiculo.create')
+                ->with('placa_prellenada', $placa);
         }
 
-        // NO VIGENTE → PAGO
-        return redirect()->route('soat.buscar', $placa);
+        // === SI TIENE SOAT VIGENTE (igual que antes) ===
+        $polizaVigente = $vehiculo->polizas()
+            ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
+            ->where('seguros.nombre', 'SOAT')
+            ->where('polizas.estado', 'vigente')
+            ->where('polizas.fecha_vencimiento', '>', now())
+            ->first();
+
+        // ESTA ES LA LÍNEA QUE FALTABA (¡SOLO ESTA!)
+        session(['vehiculo' => $vehiculo]);
+
+        return back()
+            ->with('soat_vigente', true)
+            ->with('soat_vencimiento', $polizaVigente->fecha_vencimiento->format('d/m/Y'))
+            ->with('poliza_id', $polizaVigente->id_poliza)
+            ->with('success', '¡SOAT vigente encontrado! Descarga tu póliza.');
     }
 
     /**

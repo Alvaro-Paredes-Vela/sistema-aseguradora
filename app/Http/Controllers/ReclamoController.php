@@ -14,8 +14,12 @@ class ReclamoController extends Controller
      */
     public function index()
     {
-        $reclamos = Reclamo::latest('fecha_reclamo')->paginate(10);
-        return view('reclamos.index', compact('reclamos'));
+        $reclamos = Reclamo::with(['cliente', 'empleado']) // Carga relaciones
+            ->orderByRaw("FIELD(estado, 'pendiente', 'en_proceso', 'resuelto', 'rechazado')")
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        return view('admin.reclamos.index', compact('reclamos'));
     }
 
     /**
@@ -23,7 +27,7 @@ class ReclamoController extends Controller
      */
     public function create()
     {
-        return view('reclamos.store');
+        return view('cliente.contactar');
     }
 
     /**
@@ -53,44 +57,45 @@ class ReclamoController extends Controller
      */
     public function show(Reclamo $reclamo)
     {
-        return view('reclamos.show', compact('reclamo'));
+        $reclamo->load('cliente', 'empleado'); // Carga relaciones si no están
+        return view('admin.reclamos.show', compact('reclamo'));
     }
 
     /**
-     * Formulario para editar estado (admin)
+     * Formulario para cambiar estado (empleado)
      */
     public function edit(Reclamo $reclamo)
     {
-        return view('reclamos.edit', compact('reclamo'));
+        $empleados = \App\Models\Empleado::select('id_empleado', 'nombres', 'paterno')->get();
+        return view('admin.reclamos.edit', compact('reclamo', 'empleados'));
     }
 
     /**
-     * Actualizar estado del reclamo
+     * Actualizar estado + asignar empleado
      */
     public function update(Request $request, Reclamo $reclamo)
     {
         $request->validate([
-            'estado' => 'required|in:pendiente,en_proceso,resuelto,rechazado',
-            'respuesta' => 'nullable|string', // si quieres agregar respuesta
+            'estado'       => 'required|in:pendiente,en_proceso,resuelto,rechazado',
+            'id_empleado'  => 'nullable|exists:empleados,id_empleado',
         ]);
 
         $reclamo->update([
-            'estado' => $request->estado,
-            // 'respuesta' => $request->respuesta,
+            'estado'       => $request->estado,
+            'id_empleado'  => $request->id_empleado ?? $reclamo->id_empleado,
         ]);
 
         return redirect()->route('reclamos.index')
-            ->with('success', 'Estado del reclamo actualizado.');
+            ->with('success', 'Estado del reclamo actualizado correctamente.');
     }
 
     /**
-     * Eliminar reclamo (admin)
+     * Eliminar reclamo (solo admin o superusuario)
      */
     public function destroy(Reclamo $reclamo)
     {
         $reclamo->delete();
 
-        return redirect()->route('reclamos.index')
-            ->with('success', 'Reclamo eliminado.');
+        return back()->with('success', 'Reclamo eliminado permanentemente.');
     }
 }

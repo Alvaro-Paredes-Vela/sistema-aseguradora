@@ -310,30 +310,166 @@
                             </div>
                             <div class="col-md-6 text-end">
                                 <strong>Prima Anual</strong><br>
+                                @php
+                                    // RECALCULA LA PRIMA REAL AQUÍ MISMO (SIEMPRE CORRECTA)
+                                    $primaBase =
+                                        $datos['valor_comercial'] *
+                                        ($datos['tipo_cobertura'] === 'total' ? 0.25 : 0.15);
+                                    $franquiciaActual = $datos['franquicia_tipo'] ?? '500';
+
+                                    $descuentos = [
+                                        'ninguna' => 0.0,
+                                        '300' => 0.1,
+                                        '500' => 0.18,
+                                        '800' => 0.25,
+                                        'porcentaje_5' => 0.2,
+                                    ];
+
+                                    $descuento = $descuentos[$franquiciaActual] ?? 0.18;
+                                    $primaReal = round($primaBase * (1 - $descuento));
+                                @endphp
                                 <div class="alert-precio">
-                                    Bs {{ number_format($prima) }}
+                                    Bs {{ number_format($primaReal) }}
                                 </div>
                             </div>
                         </div>
 
-                        <!-- BOTONES -->
-                        <form action="{{ route('automotriz.confirmar-cotizacion') }}" method="POST" class="mt-4">
+                        <!-- EXPLICACIÓN FRANQUICIA -->
+                        <div class="alert alert-info border-start border-primary border-5 p-4 mb-5">
+                            <h5><i class="fas fa-lightbulb text-primary"></i> ¿Qué es la franquicia?</h5>
+                            <p>Es la parte del daño que <strong>tú pagas</strong> en caso de accidente. A cambio,
+                                <strong>tu seguro sale más barato cada año</strong>.
+                            </p>
+                            <div class="row text-center mt-3">
+                                <div class="col-md-4"><strong>Ejemplo:</strong><br>Daño: 10.000 Bs<br>Franquicia: 500
+                                    Bs<br><span class="text-success">Tú pagas → 500 Bs</span><br><span
+                                        class="text-primary">Aseguradora paga → 9.500 Bs</span></div>
+                                <div class="col-md-4"><strong>Ahorro anual:</strong><br>Sin franquicia → Bs 2.500<br>Con
+                                    franquicia 500 → Bs 2.050<br><span class="text-success fs-4">¡Ahorras 450 Bs!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SELECCIÓN DE FRANQUICIA -->
+                        <form action="{{ route('automotriz.recalcular-prima') }}" method="POST" id="formFranquicia">
                             @csrf
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-continuar">
-                                    <i class="fas fa-check me-2"></i> Aceptar y Continuar
-                                </button>
+                            @php
+                                // PRIMA BASE REAL (SIN DESCUENTO)
+                                $primaBase =
+                                    $datos['valor_comercial'] * ($datos['tipo_cobertura'] === 'total' ? 0.25 : 0.15);
+
+                                $opciones = [
+                                    'ninguna' => [
+                                        'nombre' => 'Sin franquicia → Cobertura Total 100%',
+                                        'descuento' => 0.0,
+                                        'color' => 'dark',
+                                        'badge' => 'PREMIUM',
+                                    ],
+                                    '300' => ['nombre' => '300 Bs', 'descuento' => 0.1, 'color' => 'primary'],
+                                    '500' => [
+                                        'nombre' => '500 Bs (Recomendado)',
+                                        'descuento' => 0.18,
+                                        'color' => 'success',
+                                        'badge' => 'MÁS VENDIDO',
+                                    ],
+                                    '800' => ['nombre' => '800 Bs', 'descuento' => 0.25, 'color' => 'warning'],
+                                    '1200' => [
+                                        'nombre' => '1.200 Bs (MÁXIMO AHORRO)',
+                                        'descuento' => 0.3,
+                                        'color' => 'danger',
+                                        'badge' => '30% OFF',
+                                    ],
+
+                                    'porcentaje_5' => [
+                                        'nombre' => '5% del daño',
+                                        'descuento' => 0.2,
+                                        'color' => 'info',
+                                    ],
+                                ];
+
+                                $franquiciaActual = $datos['franquicia_tipo'] ?? '500';
+                            @endphp
+
+                            <div class="row g-4">
+                                @foreach ($opciones as $valor => $op)
+                                    @php
+                                        $primaCalculada = round($primaBase * (1 - $op['descuento']));
+                                        $ahorro = round($primaBase - $primaCalculada);
+                                    @endphp
+                                    <div class="col-md-6">
+                                        <label class="d-block cursor-pointer">
+                                            <input type="radio" name="franquicia_tipo" value="{{ $valor }}"
+                                                class="d-none" {{ $franquiciaActual == $valor ? 'checked' : '' }}
+                                                onchange="this.form.submit()">
+                                            <div
+                                                class="p-4 rounded-3 border-3 text-center transition-all {{ $franquiciaActual == $valor ? 'border-' . $op['color'] . ' bg-' . $op['color'] . '-50 ring-4 ring-' . $op['color'] . '-200' : 'border-gray-300 hover:border-indigo-400' }}">
+                                                <div class="fs-3 fw-bold text-{{ $op['color'] }}-700">
+                                                    {{ $op['nombre'] }}
+                                                    @if (isset($op['badge']))
+                                                        <span
+                                                            class="badge bg-success d-block mt-2">{{ $op['badge'] }}</span>
+                                                    @endif
+                                                </div>
+                                                <div class="fs-1 fw-bold text-success my-3">Bs
+                                                    {{ number_format($primaCalculada) }}</div>
+                                                <div class="text-muted">Ahorras <strong class="text-success">Bs
+                                                        {{ number_format($ahorro) }}</strong> al año</div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
                         </form>
 
-                        <div class="text-center mt-3">
-                            <a href="{{ route('automotriz.registrar-vehiculo') }}" class="text-muted small">
-                                <i class="fas fa-edit"></i> Modificar datos del vehículo
-                            </a>
+                        <!-- PRIMA FINAL (AHORA SÍ SE ACTUALIZA CORRECTAMENTE) -->
+                        <div class="text-center mt-5">
+                            @php
+                                $descuentoActual = $opciones[$franquiciaActual]['descuento'] ?? 0.18;
+                                $primaFinalReal = round($primaBase * (1 - $descuentoActual));
+                                $nombreFranquiciaActual =
+                                    $opciones[$franquiciaActual]['nombre'] ?? '500 Bs (Recomendado)';
+                            @endphp
+                            <div
+                                class="p-5 bg-gradient-to-r from-green-100 to-emerald-100 rounded-3xl border-4 border-green-400">
+                                <h2 class="text-5xl font-bold text-green-700">
+                                    Prima Final: Bs {{ number_format($primaFinalReal) }}
+                                </h2>
+                                <p class="text-2xl text-green-800 mt-3">
+                                    Con franquicia de <strong>{{ $nombreFranquiciaActual }}</strong>
+                                </p>
+                            </div>
                         </div>
+
+
+
+
+
+
+                        <!-- BOTONES -->
+                        <form action="{{ route('automotriz.confirmar-cotizacion') }}" method="POST" class="mt-4">
+                            @csrf
+                            <!-- Guardamos la franquicia elegida para el siguiente paso -->
+                            @php
+                                $primaFinal = (int) round($cotizacion['prima'] ?? 0);
+                                $franquiciaActual = $cotizacion['franquicia_tipo'] ?? '500';
+                            @endphp
+
+                            <input type="hidden" name="franquicia_tipo" value="{{ $franquiciaActual }}">
+                            <input type="hidden" name="prima_final" value="{{ $primaFinal }}">
+                            <button type="submit" class="btn btn-continuar">
+                                <i class="fas fa-check me-2"></i> Aceptar y Continuar
+                            </button>
+                    </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{{ route('automotriz.registrar-vehiculo') }}" class="text-muted small">
+                            <i class="fas fa-edit"></i> Modificar datos del vehículo
+                        </a>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 

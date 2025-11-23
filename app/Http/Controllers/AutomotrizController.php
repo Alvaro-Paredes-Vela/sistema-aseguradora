@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
+
 class AutomotrizController extends Controller
 {
     // === PASO 1: REGISTRAR VEHÍCULO BÁSICO ===
@@ -59,6 +60,8 @@ class AutomotrizController extends Controller
             'region' => $request->region,
             'tipo_cobertura' => $request->seguro, // ← total o terceros
             'cliente_id' => $cliente->id_cliente,
+            'franquicia_tipo' => 'ninguna', // valor por defecto
+            'prima' => 0, // se calculará en el paso 2
         ]);
 
         return redirect()->route('automotriz.cotizar-paso2');
@@ -67,66 +70,77 @@ class AutomotrizController extends Controller
     public function cotizarPaso2()
     {
         $datos = Session::get('cotizacion_automotriz');
-        if (!$datos) {
-            return redirect()->route('automotriz.registrar-vehiculo')->with('error', 'Debes registrar el vehículo primero.');
-        }
+        if (!$datos) return redirect()->route('automotriz.registrar-vehiculo');
 
-        $prima = $this->calcularPrima($datos);
+        $prima = $this->calcularPrima($datos, $datos['franquicia_tipo'] ?? '500');
+        $datos['prima'] = $prima;
+        Session::put('cotizacion_automotriz', $datos);
 
         return view('cliente.automotriz.cotizar_paso2', compact('datos', 'prima'));
     }
 
-    private function calcularPrima($datos)
+    // NUEVO: Recalcular prima al cambiar franquicia
+    public function recalcularPrima(Request $request)
+    {
+        $request->validate([
+            'franquicia_tipo' => 'required|in:ninguna,300,500,800,1200,porcentaje_5',
+        ]);
+
+        $cotizacion = Session::get('cotizacion_automotriz');
+
+        // CALCULAR PRIMA BASE (SIN DESCUENTO)
+        $primaBase = $cotizacion['valor_comercial'] * ($cotizacion['tipo_cobertura'] === 'total' ? 0.25 : 0.15);
+
+        $descuentos = [
+            'ninguna' => 0.00,
+            '300' => 0.10,
+            '500' => 0.18,
+            '800' => 0.25,
+            '1200'         => 0.30,
+            'porcentaje_5' => 0.20,
+        ];
+
+        $descuento = $descuentos[$request->franquicia_tipo] ?? 0.18;
+        $primaNueva = round($primaBase * (1 - $descuento));
+
+        $cotizacion['franquicia_tipo'] = $request->franquicia_tipo;
+        $cotizacion['prima'] = $primaNueva;
+        Session::put('cotizacion_automotriz', $cotizacion);
+
+        return redirect()->back();
+    }
+
+    private function calcularPrima($datos, $franquiciaTipo = '500')
     {
         $valor = $datos['valor_comercial'];
-        $tipo = $datos['tipo_cobertura'];
-        $uso = $datos['uso_vehiculo'];
-        $region = $datos['region'];
+        $tipo  = $datos['tipo_cobertura'];
 
-        // Base: porcentaje del valor comercial
-        $porcentajes = [
-            'total' => 0.045,    // 4.5% del valor
-            'terceros' => 0.018  // 1.8% del valor
+        $primaBase = $valor * ($tipo === 'total' ? 0.25 : 0.15);
+
+        $descuentos = [
+            'ninguna'      => 0.00,
+            '300'          => 0.10,
+            '500'          => 0.18,
+            '800'          => 0.25,
+            '1200'         => 0.30,
+            'porcentaje_5' => 0.20,
         ];
 
-        $prima = $valor * $porcentajes[$tipo];
+        $descuento = $descuentos[$franquiciaTipo] ?? 0.18;
+        $primaFinal = round($primaBase * (1 - $descuento));
 
-        // Ajuste por uso
-        if ($uso === 'publico') {
-            $prima *= 1.5;
-        }
+        $datos['prima'] = $primaFinal;
+        $datos['franquicia_tipo'] = $franquiciaTipo;
 
-        // Ajuste por región (riesgo)
-        $multiplicadores = [
-            'santa_cruz' => 1.0,
-            'la_paz' => 1.3,
-            'cochabamba' => 1.1,
-            'oruro' => 1.2,
-            'potosi' => 1.15,
-            'beni' => 1.05,
-            'pando' => 1.05,
-            'chuquisaca' => 1.08,
-            'tarija' => 1.1
-        ];
-
-        $prima *= $multiplicadores[$region];
-
-        // Redondear a 2 decimales
-        return round($prima);
+        return $datos;
     }
 
     public function confirmarCotizacion(Request $request)
     {
-        $datos = Session::get('cotizacion_automotriz');
-        if (!$datos) {
-            return redirect()->route('automotriz.registrar-vehiculo')
-                ->with('error', 'Debes registrar el vehículo primero.');
+        $cotizacion = Session::get('cotizacion_automotriz');
+        if (!$cotizacion || !$cotizacion['prima']) {
+            return redirect()->route('automotriz.registrar-vehiculo');
         }
-
-        $prima = $this->calcularPrima($datos);
-
-        // SOLO GUARDA LA PRIMA
-        Session::put('cotizacion_automotriz.prima', $prima);
 
         return redirect()->route('automotriz.completar-registro');
     }
@@ -266,18 +280,51 @@ class AutomotrizController extends Controller
                 ? 'Seguro Total Automotriz'
                 : 'Seguro a Terceros Automotriz';
 
+            $primaNumero = 0;
+
+            if (isset($cotizacion['prima'])) {
+                $valor = $cotizacion['prima'];
+                if (is_numeric($valor)) {
+                    $primaNumero = (int) round($valor);
+                } elseif (is_array($valor) && isset($valor['monto'])) {
+                    $primaNumero = (int) round($valor['monto']);
+                } elseif (is_object($valor) && isset($valor->monto)) {
+                    $primaNumero = (int) round($valor->monto);
+                }
+            }
+
+            // Si por algún motivo sigue en 0, recalculamos rápido para no fallar
+            if ($primaNumero <= 0) {
+                $tasa = $cotizacion['tipo_cobertura'] === 'total' ? 0.25 : 0.15;
+                $primaBase = $cotizacion['valor_comercial'] * $tasa;
+
+                $descuentos = [
+                    'ninguna' => 0.00,
+                    '300' => 0.10,
+                    '500' => 0.18,
+                    '800' => 0.25,
+                    '1200' => 0.30,
+                    'porcentaje_5' => 0.20,
+                ];
+                $descuento = $descuentos[$cotizacion['franquicia_tipo'] ?? '500'] ?? 0.18;
+
+                $primaNumero = (int) round($primaBase * (1 - $descuento));
+            }
+
             $seguro = \App\Models\Seguro::create([
                 'nombre' => $nombreSeguro,
                 'id_tipo' => $idTipoAutomotriz,
                 'id_categoria' => 2,
                 //vigenicia 1 año dato esta en date
                 'vigencia' => 12,
-                'precio' => $cotizacion['prima'],
+                'precio' => $primaNumero,
             ]);
+
+            $this->registrarRequisitosParaSeguro($seguro, $cotizacion['tipo_cobertura']);
 
             // 4. CREAR COTIZACIÓN
             $cotizacionDB = \App\Models\Cotizacion::create([
-                'precio_total' => $cotizacion['prima'],
+                'precio_total' => $primaNumero,
                 'fecha' => now(),
                 'id_vehiculo' => $vehiculo->id_vehiculo,
                 'id_seguro' => $seguro->id_seguro,
@@ -291,7 +338,7 @@ class AutomotrizController extends Controller
                 'id_vehiculo' => $vehiculo->id_vehiculo,
                 'id_seguro' => $seguro->id_seguro,
                 'id_cotizacion' => $cotizacionDB->id_cotizacion,
-                'monto_total' => $cotizacion['prima'],
+                'monto_total' => $primaNumero,
             ]);
 
             // GUARDAR EN SESIÓN
@@ -307,28 +354,84 @@ class AutomotrizController extends Controller
                 'id_vehiculo' => $vehiculo->id_vehiculo,
                 'id_venta' => $venta->id_venta,
                 'id_seguro' => $seguro->id_seguro, // AÑADIDO
-                'monto_prima' => $cotizacion['prima'],
+                'monto_prima' => $primaNumero,
             ]);
+
+            // === 6. FRANQUICIA (SOLO SI ELIGIÓ UNA) ===
+            $franquiciaTipo = $cotizacion['franquicia_tipo'] ?? '500'; // por si viene vacío
+
+            if ($franquiciaTipo !== 'ninguna') {
+                // EL CLIENTE SÍ ELIGIÓ FRANQUICIA → CREAMOS EL REGISTRO
+                $nombre = $franquiciaTipo === 'porcentaje_5'
+                    ? 'Franquicia 5% del daño'
+                    : "Franquicia {$franquiciaTipo} Bs";
+
+                $monto = in_array($franquiciaTipo, ['300', '500', '800']) ? (float)$franquiciaTipo : null;
+                $porcentaje = $franquiciaTipo === 'porcentaje_5' ? 5.00 : null;
+
+                // Crear registro en tabla franquicias
+                \App\Models\Franquicia::create([
+                    'nombre' => $nombre,
+                    'monto' => $monto,
+                    'porcentaje' => $porcentaje,
+                    'descripcion' => 'Franquicia seleccionada por el cliente',
+                    'id_poliza' => $poliza->id_poliza,
+                ]);
+            }
 
             $prima = \App\Models\Prima::create([
                 'id_poliza' => $poliza->id_poliza,
-                'monto' => $cotizacion['prima'],
+                'monto' => $primaNumero,
                 'fecha_inicio' => now(),
                 'fecha_fin' => now()->addYear(),
                 'estado' => 'activa',
                 'descripcion' => 'Prima anual - ' . ucfirst($cotizacion['tipo_cobertura']),
             ]);
             // 7. GUARDAR id_prima EN SESIÓN
+            // Guardar en sesión
+            Session::put('cotizacion_automotriz.id_venta', $venta->id_venta);
             Session::put('cotizacion_automotriz.id_prima', $prima->id_prima);
 
             return redirect()->route('automotriz.pago')
                 ->with('success', 'Registro completado. Procede al pago.');
         });
     }
-    private function getIdSeguro($tipo)
+    private function registrarRequisitosParaSeguro($seguro, $tipoCobertura)
     {
-        return \App\Models\Seguro::where('nombre', 'like', "%$tipo%")->first()->id_seguro;
-        // O mejor: crea un campo 'tipo_seguro' en la tabla seguros
+        // 1. Definimos los requisitos según el tipo de cobertura
+        $requisitosPorTipo = [
+            'total' => [
+                'CI del Propietario',
+                'RUAT Original',
+                'Inspección Técnica Vehicular',
+                'Factura Original o Título de Propiedad',
+                'Certificado de No Adeudar Impuestos (SAT)',
+            ],
+            'terceros' => [
+                'CI del Propietario',
+                'RUAT Original',
+            ],
+        ];
+
+        $nombresRequisitos = $requisitosPorTipo[$tipoCobertura] ?? $requisitosPorTipo['terceros'];
+
+        // 2. Recorremos y creamos/vinculamos cada requisito
+        foreach ($nombresRequisitos as $nombre) {
+
+            // Crea el requisito si no existe (evita duplicados)
+            $requisito = \App\Models\Requisito::firstOrCreate(
+                ['nombre' => $nombre],
+                [
+                    'descripcion' => 'Requisito obligatorio para póliza automotriz',
+                    'tipo'        => 'documento',
+                ]
+            );
+
+            // Vincula al seguro con la marca de obligatorio
+            $seguro->requisitos()->syncWithoutDetaching([
+                $requisito->id_requisito => ['obligatorio' => '1']
+            ]);
+        }
     }
 
     // === BUSCAR PLACA DESDE MODAL ===
@@ -370,20 +473,27 @@ class AutomotrizController extends Controller
     // === DESCARGAR PÓLIZA (PDF) ===
     public function descargarPoliza($id)
     {
-        $poliza = Poliza::with(['vehiculo.cliente', 'seguro'])->findOrFail($id);
+        // ANTES (tú tenías esto)
+        // $poliza = Poliza::with(['vehiculo.cliente', 'seguro'])->findOrFail($id);
 
-        // CARGAR PRIMA MANUALMENTE (SIN RELACIÓN)
+        // AHORA (así sí carga la franquicia)
+        $poliza = Poliza::with([
+            'vehiculo.cliente',
+            'vehiculo.modelo.marca',  // opcional, pero útil
+            'seguro',
+            'franquicia'              // ← ESTO ES LO QUE FALTABA
+        ])->findOrFail($id);
+
         $prima = \App\Models\Prima::where('id_poliza', $poliza->id_poliza)->first();
 
-        // Seguridad
-        $cotizacion = session('cotizacion_automotriz');
-        //if (!$cotizacion || $cotizacion['id_venta'] != $poliza->id_venta) {
-        //abort(403);
-        //}
-        // Aquí generarás el PDF (más adelante)
+        // Seguridad (puedes descomentar cuando quieras)
+        // $cotizacion = session('cotizacion_automotriz');
+        // if (!$cotizacion || $cotizacion['id_venta'] != $poliza->id_venta) {
+        //     abort(403);
+        // }
+
         return view('cliente.automotriz.poliza_pdf', compact('poliza', 'prima'));
     }
-
     private function getIdSeguroAutomotriz()
     {
         return 2; // Reemplaza con el ID real del seguro Automotriz
@@ -420,9 +530,40 @@ class AutomotrizController extends Controller
 
         $path = $request->file('comprobante')->store('comprobantes', 'public');
 
+        // === FORZAMOS QUE EL MONTO SEA UN NÚMERO ENTERO (NUNCA MÁS ARRAY) ===
+        $montoPago = 0;
+
+        if (isset($cotizacion['prima'])) {
+            $valor = $cotizacion['prima'];
+            if (is_numeric($valor)) {
+                $montoPago = (int) round($valor);
+            } elseif (is_array($valor) && isset($valor['monto'])) {
+                $montoPago = (int) round($valor['monto']);
+            } elseif (is_object($valor) && isset($valor->monto)) {
+                $montoPago = (int) round($valor->monto);
+            }
+        }
+
+        // Si por algún motivo sigue en 0 → recalculamos al vuelo (nunca fallará)
+        if ($montoPago <= 0) {
+            $tasa = $cotizacion['tipo_cobertura'] === 'total' ? 0.25 : 0.15;
+            $primaBase = $cotizacion['valor_comercial'] * $tasa;
+
+            $descuentos = [
+                'ninguna'      => 0.00,
+                '300'          => 0.10,
+                '500'          => 0.18,
+                '800'          => 0.25,
+                '1200'         => 0.30,
+                'porcentaje_5' => 0.20,
+            ];
+            $descuento = $descuentos[$cotizacion['franquicia_tipo'] ?? '500'] ?? 0.18;
+
+            $montoPago = (int) round($primaBase * (1 - $descuento));
+        }
         \App\Models\Pago::create([
             'fecha' => now()->toDateString(),
-            'monto' => $cotizacion['prima'],
+            'monto' => $montoPago,
             'comprobante' => $path,
             'estado_pago' => 'pendiente',
             'referencia' => 'PANK' . $cotizacion['id_venta'],

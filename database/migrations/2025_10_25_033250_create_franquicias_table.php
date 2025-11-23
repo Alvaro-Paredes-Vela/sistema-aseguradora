@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('franquicias', function (Blueprint $table) {
             $table->id('id_franquicia');
-            $table->string('nombre', 100)->nullable();
-            $table->decimal('porcentaje_cobertura', 5, 2)->nullable();
-            $table->decimal('monto_min', 12, 2)->nullable();
-            $table->decimal('monto_max', 12, 2)->nullable();
+            $table->string('nombre', 100); // ej: "Franquicia Estándar 500 Bs"
+            $table->decimal('monto', 10, 2)->nullable();        // ej: 500.00
+            $table->decimal('porcentaje', 5, 2)->nullable();     // ej: 5.00
             $table->text('descripcion')->nullable();
-            $table->unsignedBigInteger('id_siniestro');
-            $table->foreign('id_siniestro')->references('id_siniestro')->on('siniestros')->onDelete('cascade');
+
+            // UNA sola franquicia por póliza
+            $table->unsignedBigInteger('id_poliza');
+            $table->foreign('id_poliza')->references('id_poliza')->on('polizas')->onDelete('cascade');
             $table->timestamps();
         });
     }

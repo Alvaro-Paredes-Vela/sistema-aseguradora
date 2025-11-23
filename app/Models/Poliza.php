@@ -45,4 +45,8 @@ class Poliza extends Model
     {
         return $this->hasMany(Siniestro::class, 'id_poliza', 'id_poliza');
     }
+    public function franquicia()
+    {
+        return $this->hasOne(Franquicia::class, 'id_poliza', 'id_poliza');
+    }
 }

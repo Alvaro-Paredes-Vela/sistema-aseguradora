@@ -308,8 +308,37 @@
                                     {{ ucwords(str_replace('_', ' ', $cotizacion['region'])) }}<br>
                                     <strong>Tipo Seguro:</strong>
                                     {{ $cotizacion['tipo_cobertura'] === 'total' ? 'Seguro Total' : 'Seguro a Terceros' }}<br>
+                                    @php
+                                        // RECALCULAMOS LA PRIMA AQUÍ MISMO (NUNCA MÁS FALLA)
+                                        $valor = $cotizacion['valor_comercial'] ?? 0;
+                                        $tipo = $cotizacion['tipo_cobertura'] ?? 'terceros';
+                                        $franquicia = $cotizacion['franquicia_tipo'] ?? '500';
+
+                                        // Prima base
+                                        $primaBase = $valor * ($tipo === 'total' ? 0.25 : 0.15);
+
+                                        // Descuentos por franquicia
+                                        $descuentos = [
+                                            'ninguna' => 0.0,
+                                            '300' => 0.1,
+                                            '500' => 0.18,
+                                            '800' => 0.25,
+                                            '1200' => 0.3,
+                                            'porcentaje_5' => 0.2,
+                                        ];
+
+                                        $descuento = $descuentos[$franquicia] ?? 0.18;
+                                        $primaCalculada = round($primaBase * (1 - $descuento));
+
+                                        // Si por algún motivo sigue en 0, usamos el valor que traiga la sesión (por si acaso)
+                                        if ($primaCalculada <= 0 && isset($cotizacion['prima'])) {
+                                            $primaCalculada = is_numeric($cotizacion['prima'])
+                                                ? (int) $cotizacion['prima']
+                                                : 0;
+                                        }
+                                    @endphp
                                     <strong class="text-success">Prima Total: Bs
-                                        {{ number_format($cotizacion['prima'], 2) }}</strong>
+                                        {{ number_format($primaCalculada, 2) }}</strong>
                                 </div>
                             </div>
                         </div>

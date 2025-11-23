@@ -327,22 +327,31 @@ return [
         [
             'text' => 'Categorías',
             'url' => '/categorias',
-            'icon' => 'fas fa-tags',
-            'label' => null,
-            'label_color' => 'danger',
+            'icon'        => 'fas fa-layer-group',           // Mejor que tags
+            'icon_color'  => 'cyan',
             //'can' => 'manage-categorias', // Permiso (opcional)
         ],
 
         [
             'text' => 'Tipos de Seguro',
             'url' => '/tipos-seguro',
-            'icon' => 'fas fa-shield-alt',
+            // Escudo con check = tipo de cobertura
+            'icon'        => 'fas fa-shield-alt text-success',
+            'icon_color'  => 'success',
         ],
         // paleta para reclamos
         [
             'text' => 'Reclamos',
             'url' => '/reclamos',
-            'icon' => 'fas fa-file-alt',
+            'icon'        => 'fas fa-file-contract text-warning',   // Documento con sello = reclamo formal
+            'icon_color'  => 'warning',
+        ],
+        // para registrar siniestros
+        [
+            'text' => 'Siniestros',
+            'url' => '/siniestros',
+            'icon'        => 'fas fa-car-crash text-danger',           // Ícono perfecto y súper visual
+            'icon_color'  => 'danger',
         ],
         [
             'text' => 'Pagos Pendientes',

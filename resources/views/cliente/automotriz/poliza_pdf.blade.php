@@ -331,6 +331,125 @@
                 </table>
             </div>
 
+            <!-- BLOQUE UNIFICADO: SIEMPRE MUESTRA PRIMA BASE, PRIMA FINAL Y AHORRO -->
+            <div class="section"
+                style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 6px solid #22c55e;">
+
+                @php
+                    // 1. Valor comercial del vehículo
+                    $valorComercial = $poliza->vehiculo->valor_comercial;
+
+                    // 2. DETERMINAR SI ES COBERTURA TOTAL O A TERCEROS
+                    // Basado exactamente en cómo tú lo guardas en la base de datos
+                    $nombreSeguro = $poliza->seguro->nombre ?? '';
+
+                    $esCoberturaTotal = false;
+                    if (str_contains($nombreSeguro, 'Total')) {
+                        $esCoberturaTotal = true;
+                    }
+
+                    // 3. PRIMA BASE 100% (sin descuento)
+                    $primaBase = $esCoberturaTotal
+                        ? round($valorComercial * 0.25) // Total = 25%
+                        : round($valorComercial * 0.15); // A Terceros = 15%
+
+                    // 4. PRIMA FINAL QUE PAGA EL CLIENTE (ya viene con descuento aplicado)
+                    $primaFinal = round($prima->monto);
+
+                    // 5. AHORRO (siempre positivo)
+                    $ahorro = $primaBase - $primaFinal;
+                    if ($ahorro < 0) {
+                        $ahorro = 0;
+                    }
+                @endphp
+
+                <h3>
+                    @if ($poliza->franquicia)
+                        Franquicia y Beneficio Aplicado
+                    @else
+                        Cobertura Total sin Franquicia
+                    @endif
+                </h3>
+
+                <table>
+                    <tr>
+                        <th width="40%">Prima sin franquicia (100%)</th>
+                        <td>
+                            <strong style="font-size: 16px;">Bs. {{ number_format($primaBase) }}</strong>
+                            @if ($poliza->franquicia)
+                                <del style="color: #991b1b; display: block; font-size: 12px;">(Precio base sin
+                                    beneficio)</del>
+                            @endif
+                        </td>
+                    </tr>
+
+                    @if ($poliza->franquicia)
+                        <tr>
+                            <th>Franquicia contratada</th>
+                            <td>
+                                <strong style="font-size: 15px; color: #15803d;">
+                                    {{ $poliza->franquicia->nombre }}
+                                </strong>
+                                @if ($poliza->franquicia->monto)
+                                    <br><small>Monto fijo a cargo del asegurado: <strong>Bs.
+                                            {{ number_format($poliza->franquicia->monto) }}</strong></small>
+                                @endif
+                                @if ($poliza->franquicia->porcentaje)
+                                    <br><small>Porcentaje a cargo del asegurado:
+                                        <strong>{{ $poliza->franquicia->porcentaje }}% del daño</strong></small>
+                                @endif
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th style="background: #dcfce7; color: #15803d;">
+                                AHORRO ANUAL por elegir franquicia
+                            </th>
+                            <td style="background: #dcfce7;">
+                                <strong style="font-size: 22px; color: #15803d;">
+                                    Bs. {{ number_format($ahorro) }}
+                                </strong>
+                                <span style="color: #166534; font-weight: 600;"> (¡Felicidades!)</span>
+                            </td>
+                        </tr>
+                    @else
+                        <tr>
+                            <th style="background: #fefce8; color: #92400e;">
+                                Cobertura Premium 100%
+                            </th>
+                            <td style="background: #fefce8; color: #92400e;">
+                                <strong>Sin deducible • Máxima protección</strong><br>
+                                En caso de siniestro, la compañía cubre el 100% del daño.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Ahorro anual</th>
+                            <td><strong>Bs. 0</strong> (cobertura total sin beneficio de descuento)</td>
+                        </tr>
+                    @endif
+
+                    <tr>
+                        <th style="background: #e0e7ff; color: #1e3a8a; font-size: 14px;">
+                            PRIMA FINAL QUE USTED PAGA
+                        </th>
+                        <td style="background: #e0e7ff;">
+                            <strong style="font-size: 26px; color: #1e3a8a;">
+                                Bs. {{ number_format($primaFinal) }}
+                            </strong>
+                            <br><small>Por año de cobertura</small>
+                        </td>
+                    </tr>
+                </table>
+
+                @if ($poliza->franquicia)
+                    <div
+                        style="margin-top: 15px; padding: 12px; background: #ecfdf5; border-radius: 8px; font-size: 10px; color: #166534;">
+                        En caso de siniestro, usted pagará únicamente la franquicia indicada.<br>
+                        La aseguradora indemnizará el resto (hasta el valor comercial del vehículo).
+                    </div>
+                @endif
+            </div>
+
             <!-- QR DE VERIFICACIÓN -->
             <div class="qr-container">
                 @php

@@ -193,8 +193,9 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Placa *</label>
                             <input type="text" name="placa" class="form-control text-uppercase"
-                                value="{{ strtoupper(request()->get('placa') ?? old('placa')) }}"
-                                placeholder="Ej: 5842BNY" required maxlength="15">
+                                value="{{ strtoupper(old('placa') ?? (session('placa_prellenada') ?? (request()->get('placa') ?? ''))) }}"
+                                placeholder="Ej: 5842BNY" required maxlength="15"
+                                {{ session('placa_prellenada') || request()->get('placa') ? 'readonly' : '' }}>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Año de Fabricación *</label>

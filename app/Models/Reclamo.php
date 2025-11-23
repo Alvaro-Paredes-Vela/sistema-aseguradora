@@ -10,7 +10,7 @@ class Reclamo extends Model
     use HasFactory;
 
     protected $table = 'reclamos';
-    protected $primaryKey = 'id_reclamo';
+    protected $primaryKey = 'id';
 
 
     protected $fillable = [

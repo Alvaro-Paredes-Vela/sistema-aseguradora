@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TipoSeguro extends Model
 {
     protected $table = 'tipos_seguro';
-    protected $primaryKey = 'id_tipo_seguro';
+    protected $primaryKey = 'id_tipo';
 
     protected $fillable = [
         'nombre',
@@ -16,6 +16,6 @@ class TipoSeguro extends Model
 
     public function seguros()
     {
-        return $this->hasMany(Seguro::class, 'id_tipo_seguro', 'id_tipo_seguro');
+        return $this->hasMany(Seguro::class, 'id_tipo', 'id_tipo');
     }
 }

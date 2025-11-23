@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\CategoriaController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\TipoSeguroController;
 use App\Http\Controllers\PolizaController;
 use App\Http\Controllers\PagoPendienteController;
 use App\Http\Controllers\AutomotrizController;
+use App\Http\Controllers\SiniestroController;
 
 // === PÁGINA PRINCIPAL (pública) ===
 Route::get('/', function () {
@@ -126,9 +126,9 @@ Route::delete('/categorias/{id_categoria}', [CategoriaController::class, 'destro
 Route::get('/tipos-seguro', [TipoSeguroController::class, 'index'])->name('tipos-seguro.index');
 Route::get('/tipos-seguro/create', [TipoSeguroController::class, 'create'])->name('tipos-seguro.create');
 Route::post('/tipos-seguro', [TipoSeguroController::class, 'store'])->name('tipos-seguro.store');
-Route::get('/tipos-seguro/{id_tipo}/edit', [TipoSeguroController::class, 'edit'])->name('tipos-seguro.edit');
-Route::put('/tipos-seguro/{id_tipo}', [TipoSeguroController::class, 'update'])->name('tipos-seguro.update');
-Route::delete('/tipos-seguro/{id_tipo}', [TipoSeguroController::class, 'destroy'])->name('tipos-seguro.destroy');
+Route::get('/tipos-seguro/{id_tipo_seguro}/edit', [TipoSeguroController::class, 'edit'])->name('tipos-seguro.edit');
+Route::put('/tipos-seguro/{id_tipo_seguro}', [TipoSeguroController::class, 'update'])->name('tipos-seguro.update');
+Route::delete('/tipos-seguro/{id_tipo_seguro}', [TipoSeguroController::class, 'destroy'])->name('tipos-seguro.destroy');
 
 // Otras rutas de cliente
 Route::get('/guia-siniestro', function () {
@@ -155,13 +155,6 @@ Route::get('/ComprobanteDigital', function () {
     return view('cliente.Auth.ComprobanteDigital');
 })->name('comprobante.digital');
 
-/* AUN NO DEFINIDO .
-Route::post('/cotizar/generar-pdf', function (Request $request) {
-    $data = $request->all();
-    $pdf = Pdf::loadView('cliente.cotizar-pdf', $data);
-    return $pdf->download('cotizacion.pdf');
-})->name('cotizar.generar.pdf');
-*/
 Route::get('/Precio', function (Request $request) {
     return view('admin.precio');
 })->name('precio');
@@ -170,11 +163,6 @@ Route::get('/Solicitar', function (Request $request) {
     return view('cliente.solicitarAgente');
 })->name('Solicitar.agente');
 
-/* ruta para la compra de soat
-Route::get('/ventas-soat', function (Request $request) {
-    return view('cliente.Comprar-Soat.buscar-vehiculo');
-})->name('buscar.vehiculo');
-*/
 
 // Ruta para el archivo automotriz.blade.php
 Route::get('/automotriz', [ClienteController::class, 'automotriz'])->name('automotriz');
@@ -216,7 +204,9 @@ Route::prefix('soat')->name('soat.')->group(function () {
     // 2. Vehículo
     Route::get('/vehiculo/create', [VehiculoController::class, 'create'])->name('vehiculo.create');
     Route::post('/vehiculo', [VehiculoController::class, 'store'])->name('vehiculo.store');
-
+    // routes/web.php
+    Route::get('/vehiculo/{placa}/editar', [SoatController::class, 'editarVehiculo'])->name('vehiculo.edit');
+    Route::put('/vehiculo/{placa}', [SoatController::class, 'actualizarVehiculo'])->name('vehiculo.actualizar');
     // 3. Pago
     Route::get('/pago/{placa}', [SoatController::class, 'pagoForm'])->name('pago.form');
     Route::post('/pago', [SoatController::class, 'pagoStore'])->name('pago.store');
@@ -275,6 +265,9 @@ Route::prefix('automotriz')->name('automotriz.')->group(function () {
     Route::post('/guardar-completo', [AutomotrizController::class, 'guardarCompleto'])
         ->name('guardar-completo');
 
+    Route::post('/automotriz/recalcular-prima', [AutomotrizController::class, 'recalcularPrima'])
+        ->name('recalcular-prima');
+
     Route::get('/automotriz/pago', [AutomotrizController::class, 'pago'])->name('pago');
     Route::post('/automotriz/subir-comprobante', [AutomotrizController::class, 'subirComprobante'])->name('subir-comprobante');
     Route::get('/automotriz/espera', [AutomotrizController::class, 'espera'])->name('espera');
@@ -284,3 +277,36 @@ Route::prefix('automotriz')->name('automotriz.')->group(function () {
     Route::get('/automotriz/poliza/pdf/{id}', [AutomotrizController::class, 'descargarPoliza'])
         ->name('poliza.pdf');
 });
+
+// ruta para siniestros
+Route::get('/siniestros', [SiniestroController::class, 'index'])
+    ->name('siniestros.index');
+
+Route::get('/siniestros/crear', [SiniestroController::class, 'crear'])
+    ->name('siniestros.crear');
+
+Route::post('/siniestros/buscar', [SiniestroController::class, 'buscarPoliza'])
+    ->name('siniestros.buscar');
+
+Route::post('/siniestros', [SiniestroController::class, 'store'])
+    ->name('siniestros.store');
+
+Route::get('/siniestros/{id}', [SiniestroController::class, 'show'])
+    ->name('siniestros.show');
+
+Route::get('/siniestros/registrar', [SiniestroController::class, 'registrar'])
+    ->name('siniestros.registrar');
+
+// routes/web.php
+Route::get('/reclamos', [App\Http\Controllers\ReclamoController::class, 'index'])
+    ->name('reclamos.index');
+Route::get('/reclamos/create', [App\Http\Controllers\ReclamoController::class, 'create'])
+    ->name('reclamos.create');
+Route::post('/reclamos', [App\Http\Controllers\ReclamoController::class, 'store'])
+    ->name('reclamos.store');
+Route::get('/reclamos/{reclamo}', [App\Http\Controllers\ReclamoController::class, 'show'])
+    ->name('reclamos.show');
+Route::get('/reclamos/{reclamo}/edit', [App\Http\Controllers\ReclamoController::class, 'edit'])
+    ->name('reclamos.edit');
+Route::put('/reclamos/{reclamo}', [App\Http\Controllers\ReclamoController::class, 'update'])
+    ->name('reclamos.update');

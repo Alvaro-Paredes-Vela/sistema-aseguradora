@@ -38,8 +38,8 @@ class Siniestro extends Model
             ->withPivot('obligatorio')->withTimestamps();
     }
 
-    public function franquicias()
+    public function numeroSiniestro()
     {
-        return $this->hasMany(Franquicia::class, 'id_siniestro', 'id_siniestro');
+        return 'SIN-' . date('Y') . '-' . str_pad($this->id_siniestro, 6, '0', STR_PAD_LEFT);
     }
 }

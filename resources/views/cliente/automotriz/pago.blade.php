@@ -261,8 +261,41 @@
                         </div>
                     </div>
 
+                    @php
+                        // RECALCULA LA PRIMA EN EL MOMENTO (NUNCA MÁS DEPENDE DE LA SESIÓN)
+                        $valorComercial = $cotizacion['valor_comercial'] ?? 0;
+                        $tipoCobertura = $cotizacion['tipo_cobertura'] ?? 'terceros';
+                        $franquicia = $cotizacion['franquicia_tipo'] ?? '500';
+
+                        $primaBase = $valorComercial * ($tipoCobertura === 'total' ? 0.25 : 0.15);
+
+                        $descuentos = [
+                            'ninguna' => 0.0,
+                            '300' => 0.1,
+                            '500' => 0.18,
+                            '800' => 0.25,
+                            '1200' => 0.3,
+                            'porcentaje_5' => 0.2,
+                        ];
+
+                        $descuentoAplicado = $descuentos[$franquicia] ?? 0.18;
+                        $primaFinal = round($primaBase * (1 - $descuentoAplicado));
+
+                        // Si por algún motivo sigue en 0 y hay algo en sesión, intenta rescatarlo
+                        if ($primaFinal <= 0 && isset($cotizacion['prima'])) {
+                            $valorSesion = $cotizacion['prima'];
+                            if (is_numeric($valorSesion)) {
+                                $primaFinal = (int) round($valorSesion);
+                            } elseif (is_array($valorSesion) && isset($valorSesion['monto'])) {
+                                $primaFinal = (int) round($valorSesion['monto']);
+                            } elseif (is_object($valorSesion) && isset($valorSesion->monto)) {
+                                $primaFinal = (int) round($valorSesion->monto);
+                            }
+                        }
+                    @endphp
+
                     <div class="prima-total">
-                        PRIMA TOTAL: Bs {{ number_format($cotizacion['prima'], 2) }}
+                        PRIMA TOTAL: Bs {{ number_format($primaFinal, 2) }}
                     </div>
 
                     <p class="text-center mb-0">
