@@ -71,6 +71,19 @@
             background: #d97706;
             transform: translateY(-2px);
         }
+
+        /* Botón especial para volver a Automotriz */
+        .btn-volver-automotriz {
+            background: #1d4ed8;
+            color: white;
+            transform: translateY(-2px);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 32px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
     </style>
 </head>
 
@@ -102,6 +115,9 @@
                     </div>
                     <a href="{{ route('automotriz.poliza.pdf', $poliza->id_poliza) }}" class="btn btn-download w-100">
                         <i class="fas fa-file-pdf"></i> Descargar Póliza PDF
+                    </a><br><br>
+                    <a href="{{ route('automotriz') }}" class="btn btn-volver-automotriz">
+                        <i class="fas fa-car"></i> Volver a Seguro Automotriz
                     </a>
                 @elseif($pago && $pago->estado_pago === 'rechazado')
                     <!-- RECHAZADO -->
