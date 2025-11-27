@@ -144,7 +144,7 @@
                             @foreach ($detalles['soat'] as $v)
                                 <tr>
                                     <td>{{ $v->nombre }}</td>
-                                    <td>{{ $v->ci }}</td>
+                                    <td>{{ $v->CI }}</td>
                                     <td>Bs {{ number_format($v->monto_total, 0) }}</td>
                                     <td>{{ \Carbon\Carbon::parse($v->fecha)->format('d/m/Y') }}</td>
                                 </tr>
@@ -178,7 +178,7 @@
                             @foreach ($detalles['automotriz'] as $v)
                                 <tr>
                                     <td>{{ $v->nombre }}</td>
-                                    <td>{{ $v->ci }}</td>
+                                    <td>{{ $v->CI }}</td>
                                     <td>Bs {{ number_format($v->monto_total, 0) }}</td>
                                     <td>{{ \Carbon\Carbon::parse($v->fecha)->format('d/m/Y') }}</td>
                                 </tr>
