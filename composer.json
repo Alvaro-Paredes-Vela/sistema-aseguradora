@@ -10,8 +10,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-pgsql": "*",
         "barryvdh/laravel-dompdf": "^3.1",
         "chillerlan/php-qrcode": "^5.0",
+        "doctrine/dbal": "^4.3",
         "endroid/qr-code": "5",
         "jeroennoten/laravel-adminlte": "^3.15",
         "laravel/framework": "^12.0",
