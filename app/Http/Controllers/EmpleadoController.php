@@ -55,7 +55,7 @@ class EmpleadoController extends Controller
                 ->join('clientes', 'ventas.id_cliente', '=', 'clientes.id_cliente')
                 ->where('tipos_seguro.nombre', 'SOAT')
                 ->whereMonth('ventas.fecha', now()->month)
-                ->select('clientes.nombre', 'clientes.ci', 'ventas.monto_total', 'ventas.fecha')
+                ->select('clientes.nombre', 'clientes.CI', 'ventas.monto_total', 'ventas.fecha')
                 ->latest('ventas.fecha')
                 ->take(20)
                 ->get(),
@@ -66,7 +66,7 @@ class EmpleadoController extends Controller
                 ->join('clientes', 'ventas.id_cliente', '=', 'clientes.id_cliente')
                 ->where('tipos_seguro.nombre', 'AUTOMOTRIZ')
                 ->whereMonth('ventas.fecha', now()->month)
-                ->select('clientes.nombre', 'clientes.ci', 'ventas.monto_total', 'ventas.fecha')
+                ->select('clientes.nombre', 'clientes.CI', 'ventas.monto_total', 'ventas.fecha')
                 ->latest('ventas.fecha')
                 ->take(20)
                 ->get(),
@@ -76,7 +76,7 @@ class EmpleadoController extends Controller
                 ->join('seguros', 'ventas.id_seguro', '=', 'seguros.id_seguro')
                 ->join('tipos_seguro', 'seguros.id_tipo', '=', 'tipos_seguro.id_tipo')
                 ->whereDate('ventas.fecha', $hoy)
-                ->select('clientes.nombre', 'clientes.ci', 'ventas.monto_total', 'ventas.fecha', 'tipos_seguro.nombre as tipo_seguro')
+                ->select('clientes.nombre', 'clientes.CI', 'ventas.monto_total', 'ventas.fecha', 'tipos_seguro.nombre as tipo_seguro')
                 ->latest('ventas.fecha')
                 ->get(),
 
