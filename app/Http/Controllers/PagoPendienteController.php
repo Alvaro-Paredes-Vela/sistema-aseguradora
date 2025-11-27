@@ -91,7 +91,7 @@ class PagoPendienteController extends Controller
 
         if ($pago->comprobante) {
             Storage::disk('public')->delete($pago->comprobante);
-            $pago->omprobante = null;
+            $pago->comprobante = null;
             $pago->save();
         }
 
