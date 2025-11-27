@@ -14,8 +14,16 @@ class ReclamoController extends Controller
      */
     public function index()
     {
-        $reclamos = Reclamo::with(['cliente', 'empleado']) // Carga relaciones
-            ->orderByRaw("FIELD(estado, 'pendiente', 'en_proceso', 'resuelto', 'rechazado')")
+        $reclamos = Reclamo::with(['cliente', 'empleado'])
+            ->orderByRaw("
+            CASE estado
+                WHEN 'pendiente'    THEN 1
+                WHEN 'en_proceso'   THEN 2
+                WHEN 'resuelto'     THEN 3
+                WHEN 'rechazado'    THEN 4
+                ELSE 5
+            END ASC
+        ")
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
