@@ -32,7 +32,7 @@ class PagoPendienteController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.pagos-pendientes.index', compact('pagos'));
+        return view('admin.Pagos-Pendientes.index', compact('pagos'));
     }
 
     /**
