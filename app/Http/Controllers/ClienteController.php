@@ -29,7 +29,7 @@ class ClienteController extends Controller
         if (Session::has('cliente_id')) {
             return redirect()->route('cliente.dashboard');
         }
-        return view('cliente.auth.login');
+        return view('cliente.Auth.login');
     }
 
     public function registerForm()
