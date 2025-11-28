@@ -283,6 +283,85 @@
             .btn-back {
                 margin-left: 0;
             }
+
+            @media (max-width: 576px) {
+
+                /* 1. Header más corto y compacto */
+                .header {
+                    padding: 0.6rem 0 !important;
+                    position: relative;
+                    /* ya no sticky para que no tape */
+                }
+
+                .header .container {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    padding: 0.5rem 1rem;
+                }
+
+                /* 2. Logo + nombre arriba, centrado */
+                .logo-container {
+                    padding-left: 0 !important;
+                    justify-content: center;
+                    gap: 0.8rem;
+                }
+
+                .company-name {
+                    font-size: 1.35rem !important;
+                }
+
+                .company-subtitle {
+                    font-size: 0.7rem !important;
+                }
+
+                /* 3. Los dos botones en una sola fila horizontal, pero más pequeños y con espacio */
+                .back-button {
+                    display: flex !important;
+                    gap: 0.8rem !important;
+                    justify-content: center;
+                    width: 100%;
+                    flex-wrap: nowrap !important;
+                }
+
+                .back-button a.btn-soat {
+                    flex: 1;
+                    /* ocupan el espacio disponible */
+                    max-width: 48%;
+                    /* nunca se salen */
+                    padding: 0.65rem 0.4rem !important;
+                    font-size: 0.85rem !important;
+                    white-space: nowrap;
+                    text-align: center;
+                }
+
+                /* 4. El contenido principal empieza más arriba (no queda tapado) */
+                .guide-section {
+                    padding-top: 2rem !important;
+                    /* ← menos espacio arriba */
+                }
+
+                .guide-title h1 {
+                    font-size: 2rem !important;
+                }
+
+                .steps-container {
+                    padding: 0 1rem;
+                }
+            }
+
+            /* Para celulares muy pequeños */
+            @media (max-width: 380px) {
+                .back-button {
+                    flex-direction: column !important;
+                    gap: 0.5rem;
+                }
+
+                .back-button a.btn-soat {
+                    max-width: 100%;
+                    font-size: 0.9rem;
+                    padding: 0.75rem !important;
+                }
+            }
         }
     </style>
 </head>
