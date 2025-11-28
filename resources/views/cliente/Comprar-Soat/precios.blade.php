@@ -397,6 +397,79 @@
                 min-width: 100px;
                 font-size: 0.75rem;
             }
+
+            @media (max-width: 768px) {
+
+                .table-responsive-custom table,
+                .table-responsive-custom thead,
+                .table-responsive-custom tbody,
+                .table-responsive-custom th,
+                .table-responsive-custom td,
+                .table-responsive-custom tr {
+                    display: block;
+                }
+
+                .table-responsive-custom {
+                    overflow-x: hidden !important;
+                    margin: 0 1rem;
+                }
+
+                .table-responsive-custom thead tr {
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+                }
+
+                .table-responsive-custom tr {
+                    background: white;
+                    border-radius: 16px;
+                    margin-bottom: 1.3rem;
+                    padding: 1.4rem;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                    border-left: 7px solid var(--secondary-color);
+                }
+
+                .table-responsive-custom td {
+                    border: none;
+                    position: relative;
+                    padding: 0.75rem 0;
+                    text-align: right;
+                    font-size: 1.02rem;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+
+                .table-responsive-custom td::before {
+                    content: attr(data-label);
+                    float: left;
+                    font-weight: 700;
+                    color: var(--dark-color);
+                    text-transform: uppercase;
+                    font-size: 0.82rem;
+                    letter-spacing: 0.5px;
+                }
+
+                .table-responsive-custom td.vehicle {
+                    text-align: left !important;
+                    font-size: 1.35rem;
+                    font-weight: 900;
+                    color: var(--primary-color);
+                    background: transparent !important;
+                    border-left: none;
+                    border-bottom: 4px solid var(--secondary-color);
+                    padding-bottom: 1rem !important;
+                    margin-bottom: 0.8rem;
+                }
+
+                .table-responsive-custom td.particular::before {
+                    content: "Particular:";
+                    color: var(--particular-text);
+                }
+
+                .table-responsive-custom td:last-child {
+                    border-bottom: none;
+                }
+
+            }
         }
     </style>
 </head>
@@ -449,199 +522,200 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="vehicle">Motocicleta</td>
-                            <td class="particular">200</td>
-                            <td>155</td>
-                            <td>155</td>
-                            <td>155</td>
-                            <td>155</td>
-                            <td>155</td>
-                            <td>155</td>
-                            <td>155</td>
-                            <td>155</td>
-                            <td>155</td>
+                            <td class="vehicle" data-label="Vehículo">Motocicleta</td>
+                            <td class="particular" data-label="Particular">200</td>
+                            <td data-label="La Paz">155</td>
+                            <td data-label="Cochabamba">155</td>
+                            <td data-label="Santa Cruz">155</td>
+                            <td data-label="Tarija">155</td>
+                            <td data-label="Sucre">155</td>
+                            <td data-label="Potosí">155</td>
+                            <td data-label="Oruro">155</td>
+                            <td data-label="Beni">155</td>
+                            <td data-label="Pando">155</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Automóvil</td>
-                            <td class="particular">90</td>
-                            <td>120</td>
-                            <td>120</td>
-                            <td>120</td>
-                            <td>120</td>
-                            <td>120</td>
-                            <td>120</td>
-                            <td>120</td>
-                            <td>120</td>
-                            <td>120</td>
+                            <td class="vehicle" data-label="Vehículo">Automóvil</td>
+                            <td class="particular" data-label="Particular">90</td>
+                            <td data-label="La Paz">120</td>
+                            <td data-label="Cochabamba">120</td>
+                            <td data-label="Santa Cruz">120</td>
+                            <td data-label="Tarija">120</td>
+                            <td data-label="Sucre">120</td>
+                            <td data-label="Potosí">120</td>
+                            <td data-label="Oruro">120</td>
+                            <td data-label="Beni">120</td>
+                            <td data-label="Pando">120</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Jeep</td>
-                            <td class="particular">110</td>
-                            <td>75</td>
-                            <td>75</td>
-                            <td>75</td>
-                            <td>75</td>
-                            <td>75</td>
-                            <td>75</td>
-                            <td>75</td>
-                            <td>75</td>
-                            <td>75</td>
+                            <td class="vehicle" data-label="Vehículo">Jeep</td>
+                            <td class="particular" data-label="Particular">110</td>
+                            <td data-label="La Paz">75</td>
+                            <td data-label="Cochabamba">75</td>
+                            <td data-label="Santa Cruz">75</td>
+                            <td data-label="Tarija">75</td>
+                            <td data-label="Sucre">75</td>
+                            <td data-label="Potosí">75</td>
+                            <td data-label="Oruro">75</td>
+                            <td data-label="Beni">75</td>
+                            <td data-label="Pando">75</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Camioneta</td>
-                            <td class="particular">140</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
+                            <td class="vehicle" data-label="Vehículo">Camioneta</td>
+                            <td class="particular" data-label="Particular">140</td>
+                            <td data-label="La Paz">190</td>
+                            <td data-label="Cochabamba">190</td>
+                            <td data-label="Santa Cruz">190</td>
+                            <td data-label="Tarija">190</td>
+                            <td data-label="Sucre">190</td>
+                            <td data-label="Potosí">190</td>
+                            <td data-label="Oruro">190</td>
+                            <td data-label="Beni">190</td>
+                            <td data-label="Pando">190</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Vagoneta</td>
-                            <td class="particular">90</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
+                            <td class="vehicle" data-label="Vehículo">Vagoneta</td>
+                            <td class="particular" data-label="Particular">90</td>
+                            <td data-label="La Paz">125</td>
+                            <td data-label="Cochabamba">125</td>
+                            <td data-label="Santa Cruz">125</td>
+                            <td data-label="Tarija">125</td>
+                            <td data-label="Sucre">125</td>
+                            <td data-label="Potosí">125</td>
+                            <td data-label="Oruro">125</td>
+                            <td data-label="Beni">125</td>
+                            <td data-label="Pando">125</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Microbús</td>
-                            <td class="particular">460</td>
-                            <td>315</td>
-                            <td>315</td>
-                            <td>315</td>
-                            <td>315</td>
-                            <td>315</td>
-                            <td>315</td>
-                            <td>315</td>
-                            <td>315</td>
-                            <td>315</td>
+                            <td class="vehicle" data-label="Vehículo">Microbús</td>
+                            <td class="particular" data-label="Particular">460</td>
+                            <td data-label="La Paz">315</td>
+                            <td data-label="Cochabamba">315</td>
+                            <td data-label="Santa Cruz">315</td>
+                            <td data-label="Tarija">315</td>
+                            <td data-label="Sucre">315</td>
+                            <td data-label="Potosí">315</td>
+                            <td data-label="Oruro">315</td>
+                            <td data-label="Beni">315</td>
+                            <td data-label="Pando">315</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Colectivo</td>
-                            <td class="particular">595</td>
-                            <td>335</td>
-                            <td>335</td>
-                            <td>445</td>
-                            <td>445</td>
-                            <td>445</td>
-                            <td>445</td>
-                            <td>445</td>
-                            <td>445</td>
-                            <td>445</td>
+                            <td class="vehicle" data-label="Vehículo">Colectivo</td>
+                            <td class="particular" data-label="Particular">595</td>
+                            <td data-label="La Paz">335</td>
+                            <td data-label="Cochabamba">335</td>
+                            <td data-label="Santa Cruz">445</td>
+                            <td data-label="Tarija">445</td>
+                            <td data-label="Sucre">445</td>
+                            <td data-label="Potosí">445</td>
+                            <td data-label="Oruro">445</td>
+                            <td data-label="Beni">445</td>
+                            <td data-label="Pando">445</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Ómnibus/flota<br><small>(Más de 39 ocupantes)</small></td>
-                            <td class="particular">2.630</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
-                            <td>3.700</td>
+                            <td class="vehicle" data-label="Vehículo">Ómnibus/flota<br><small>(Más de 39
+                                    ocupantes)</small></td>
+                            <td class="particular" data-label="Particular">2.630</td>
+                            <td data-label="La Paz">3.700</td>
+                            <td data-label="Cochabamba">3.700</td>
+                            <td data-label="Santa Cruz">3.700</td>
+                            <td data-label="Tarija">3.700</td>
+                            <td data-label="Sucre">3.700</td>
+                            <td data-label="Potosí">3.700</td>
+                            <td data-label="Oruro">3.700</td>
+                            <td data-label="Beni">3.700</td>
+                            <td data-label="Pando">3.700</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Tracto Camión</td>
-                            <td class="particular">290</td>
-                            <td>185</td>
-                            <td>185</td>
-                            <td>185</td>
-                            <td>185</td>
-                            <td>185</td>
-                            <td>185</td>
-                            <td>185</td>
-                            <td>185</td>
-                            <td>185</td>
+                            <td class="vehicle" data-label="Vehículo">Tracto Camión</td>
+                            <td class="particular" data-label="Particular">290</td>
+                            <td data-label="La Paz">185</td>
+                            <td data-label="Cochabamba">185</td>
+                            <td data-label="Santa Cruz">185</td>
+                            <td data-label="Tarija">185</td>
+                            <td data-label="Sucre">185</td>
+                            <td data-label="Potosí">185</td>
+                            <td data-label="Oruro">185</td>
+                            <td data-label="Beni">185</td>
+                            <td data-label="Pando">185</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Minibús<br><small>(8 ocupantes)</small></td>
-                            <td class="particular">140</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
-                            <td>125</td>
+                            <td class="vehicle" data-label="Vehículo">Minibús<br><small>(8 ocupantes)</small></td>
+                            <td class="particular" data-label="Particular">140</td>
+                            <td data-label="La Paz">125</td>
+                            <td data-label="Cochabamba">125</td>
+                            <td data-label="Santa Cruz">125</td>
+                            <td data-label="Tarija">125</td>
+                            <td data-label="Sucre">125</td>
+                            <td data-label="Potosí">125</td>
+                            <td data-label="Oruro">125</td>
+                            <td data-label="Beni">125</td>
+                            <td data-label="Pando">125</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Minibús<br><small>(11 ocupantes)</small></td>
-                            <td class="particular">200</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
-                            <td>190</td>
+                            <td class="vehicle" data-label="Vehículo">Minibús<br><small>(11 ocupantes)</small></td>
+                            <td class="particular" data-label="Particular">200</td>
+                            <td data-label="La Paz">190</td>
+                            <td data-label="Cochabamba">190</td>
+                            <td data-label="Santa Cruz">190</td>
+                            <td data-label="Tarija">190</td>
+                            <td data-label="Sucre">190</td>
+                            <td data-label="Potosí">190</td>
+                            <td data-label="Oruro">190</td>
+                            <td data-label="Beni">190</td>
+                            <td data-label="Pando">190</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Minibús<br><small>(15 ocupantes)</small></td>
-                            <td class="particular">330</td>
-                            <td>245</td>
-                            <td>245</td>
-                            <td>245</td>
-                            <td>245</td>
-                            <td>245</td>
-                            <td>245</td>
-                            <td>245</td>
-                            <td>245</td>
-                            <td>245</td>
+                            <td class="vehicle" data-label="Vehículo">Minibús<br><small>(15 ocupantes)</small></td>
+                            <td class="particular" data-label="Particular">330</td>
+                            <td data-label="La Paz">245</td>
+                            <td data-label="Cochabamba">245</td>
+                            <td data-label="Santa Cruz">245</td>
+                            <td data-label="Tarija">245</td>
+                            <td data-label="Sucre">245</td>
+                            <td data-label="Potosí">245</td>
+                            <td data-label="Oruro">245</td>
+                            <td data-label="Beni">245</td>
+                            <td data-label="Pando">245</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Camión<br><small>(3 ocupantes)</small></td>
-                            <td class="particular">330</td>
-                            <td>195</td>
-                            <td>195</td>
-                            <td>195</td>
-                            <td>195</td>
-                            <td>195</td>
-                            <td>195</td>
-                            <td>195</td>
-                            <td>195</td>
-                            <td>195</td>
+                            <td class="vehicle" data-label="Vehículo">Camión<br><small>(3 ocupantes)</small></td>
+                            <td class="particular" data-label="Particular">330</td>
+                            <td data-label="La Paz">195</td>
+                            <td data-label="Cochabamba">195</td>
+                            <td data-label="Santa Cruz">195</td>
+                            <td data-label="Tarija">195</td>
+                            <td data-label="Sucre">195</td>
+                            <td data-label="Potosí">195</td>
+                            <td data-label="Oruro">195</td>
+                            <td data-label="Beni">195</td>
+                            <td data-label="Pando">195</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Camión<br><small>(18 ocupantes)</small></td>
-                            <td class="particular">1.020</td>
-                            <td>975</td>
-                            <td>975</td>
-                            <td>975</td>
-                            <td>975</td>
-                            <td>975</td>
-                            <td>975</td>
-                            <td>975</td>
-                            <td>975</td>
-                            <td>975</td>
+                            <td class="vehicle" data-label="Vehículo">Camión<br><small>(18 ocupantes)</small></td>
+                            <td class="particular" data-label="Particular">1.020</td>
+                            <td data-label="La Paz">975</td>
+                            <td data-label="Cochabamba">975</td>
+                            <td data-label="Santa Cruz">975</td>
+                            <td data-label="Tarija">975</td>
+                            <td data-label="Sucre">975</td>
+                            <td data-label="Potosí">975</td>
+                            <td data-label="Oruro">975</td>
+                            <td data-label="Beni">975</td>
+                            <td data-label="Pando">975</td>
                         </tr>
                         <tr>
-                            <td class="vehicle">Camión<br><small>(25 ocupantes)</small></td>
-                            <td class="particular">1.310</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
-                            <td>1.260</td>
+                            <td class="vehicle" data-label="Vehículo">Camión<br><small>(25 ocupantes)</small></td>
+                            <td class="particular" data-label="Particular">1.310</td>
+                            <td data-label="La Paz">1.260</td>
+                            <td data-label="Cochabamba">1.260</td>
+                            <td data-label="Santa Cruz">1.260</td>
+                            <td data-label="Tarija">1.260</td>
+                            <td data-label="Sucre">1.260</td>
+                            <td data-label="Potosí">1.260</td>
+                            <td data-label="Oruro">1.260</td>
+                            <td data-label="Beni">1.260</td>
+                            <td data-label="Pando">1.260</td>
                         </tr>
                     </tbody>
                 </table>
