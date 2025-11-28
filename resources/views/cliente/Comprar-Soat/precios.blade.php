@@ -411,11 +411,10 @@
             }
 
             /* ================================================================
-   TABLA SOAT – PERFECTA EN CELULAR (tarjetas) + 100% IGUAL EN PC
+   TABLA SOAT EN CELULAR – TARJETAS PARA 9 DEPARTAMENTOS
    ================================================================ */
             @media (max-width: 768px) {
 
-                /* Ocultamos la tabla normal y creamos tarjetas */
                 .table-responsive-custom {
                     overflow-x: hidden !important;
                     margin: 0 0.8rem;
@@ -425,88 +424,106 @@
                     display: none;
                 }
 
+                /* Toda la tarjeta */
                 .table-responsive-custom tr {
                     display: block;
-                    background: white;
-                    border-radius: 20px;
-                    margin-bottom: 1.8rem;
-                    padding: 1.8rem;
-                    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
-                    border-left: 8px solid var(--secondary-color);
+                    background: #ffffff;
+                    border-radius: 18px;
+                    margin-bottom: 2rem;
+                    padding: 1.6rem 1.6rem 0.5rem;
+                    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+                    border-left: 6px solid var(--secondary-color);
+                    position: relative;
                 }
 
-                .table-responsive-custom td {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 0.9rem 0;
-                    border-bottom: 1px solid #f0f0f0;
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                }
-
-                .table-responsive-custom td:last-child {
-                    border-bottom: none;
-                }
-
-                /* Etiqueta (departamento) a la izquierda */
-                .table-responsive-custom td::before {
-                    content: attr(data-label);
-                    font-weight: 700;
-                    color: #475569;
-                    text-transform: uppercase;
-                    font-size: 0.88rem;
-                    letter-spacing: 0.5px;
-                }
-
-                /* Precio a la derecha, grande y en azul */
-                .table-responsive-custom td {
-                    color: var(--primary-color);
-                }
-
-                /* Nombre del vehículo – título grande */
+                /* Título del vehículo */
                 .table-responsive-custom td.vehicle {
                     display: block !important;
                     text-align: center;
-                    font-size: 1.6rem;
+                    font-size: 1.65rem;
                     font-weight: 900;
-                    color: var(--primary-color);
                     font-family: 'Orbitron', sans-serif;
-                    padding: 0 0 1.4rem 0 !important;
-                    margin-bottom: 1.2rem;
-                    border-bottom: 5px solid var(--secondary-color);
-                    background: transparent !important;
+                    color: var(--primary-color);
+                    padding-bottom: 1rem !important;
+                    border-bottom: 4px solid var(--secondary-color);
+                    margin-bottom: 1.4rem;
                 }
 
                 .table-responsive-custom td.vehicle::before {
                     content: none;
                 }
 
-                /* PARTICULAR – destacado */
+                /* ===================== PARTICULAR ===================== */
                 .table-responsive-custom td.particular {
+                    display: flex !important;
+                    justify-content: space-between;
+                    align-items: center;
                     background: var(--particular-bg);
                     color: var(--particular-text);
-                    font-size: 1.35rem;
+                    font-size: 1.4rem;
                     font-weight: 900;
-                    border-radius: 14px;
-                    padding: 1.1rem 1.2rem !important;
-                    margin: 1rem -1.8rem;
+                    padding: 1rem 1.4rem !important;
+                    margin: 0 -1.6rem 1.6rem -1.6rem;
+                    border-radius: 10px;
                 }
 
                 .table-responsive-custom td.particular::before {
-                    content: "PARTICULAR:";
-                    color: var(--particular-text);
+                    content: "PARTICULAR";
+                    font-size: 0.95rem;
+                    font-weight: 700;
                 }
 
-                /* Santa Cruz – amarillo */
+                /* ===================== PÚBLICO (9 departamentos) ===================== */
+                /* Encabezado de la sección Publico */
+                .table-responsive-custom tr::before {
+                    content: "PÚBLICO - 9 DEPARTAMENTOS";
+                    display: block;
+                    background: var(--public-header-bg);
+                    color: var(--public-header-text);
+                    font-weight: 900;
+                    font-size: 1.05rem;
+                    text-align: center;
+                    padding: 0.7rem;
+                    margin: -1.6rem -1.6rem 1.4rem -1.6rem;
+                    border-radius: 12px 12px 0 0;
+                }
+
+                /* Cada departamento */
+                .table-responsive-custom td:not(.vehicle):not(.particular) {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0.9rem 0;
+                    border-bottom: 1px solid #e4e4e4;
+                    font-size: 1.15rem;
+                    font-weight: 600;
+                    color: #1f2937;
+                }
+
+                /* Etiqueta del departamento */
+                .table-responsive-custom td:not(.vehicle):not(.particular)::before {
+                    content: attr(data-label);
+                    font-weight: 700;
+                    color: #475569;
+                    text-transform: uppercase;
+                    font-size: 0.85rem;
+                }
+
+                /* Santa Cruz destacado */
                 .table-responsive-custom td[data-label="Santa Cruz"] {
-                    background: #fffbeb;
-                    color: #92400e;
+                    background: #fff7e6;
+                    color: #b45309;
                     font-weight: 800;
-                    border-radius: 12px;
-                    padding: 0.9rem 1rem !important;
+                    border-radius: 10px;
+                    padding: 1rem !important;
+                    margin: 0.4rem 0;
+                }
+
+                .table-responsive-custom td:last-child {
+                    border-bottom: none;
+                    padding-bottom: 1.6rem;
                 }
             }
+
         }
     </style>
 </head>
