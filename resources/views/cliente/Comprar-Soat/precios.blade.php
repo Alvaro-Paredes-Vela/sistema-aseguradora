@@ -398,111 +398,19 @@
                 font-size: 0.75rem;
             }
 
-            @media (max-width: 768px) {
-                .table-responsive-custom {
-                    overflow-x: hidden !important;
-                    margin: 0 0.8rem;
-                }
+            th.particular,
+            td.particular {
+                font-size: 0.78rem;
 
-                .table-responsive-custom thead {
-                    display: none;
-                }
-
-                .table-responsive-custom tr {
-                    background: white;
-                    border-radius: 18px;
-                    margin-bottom: 1.6rem;
-                    padding: 1.6rem;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-                    border-left: 7px solid var(--secondary-color);
-                    display: block;
-                }
-
-                .table-responsive-custom td {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 0.85rem 0;
-                    border-bottom: 1px solid #f1f5f9;
-                    font-size: 1.05rem;
-                    font-weight: 600;
-                }
-
-                .table-responsive-custom td:last-child {
-                    border-bottom: none;
-                }
-
-                /* NOMBRE DEL DEPARTAMENTO / PARTICULAR */
-                .table-responsive-custom td::before {
-                    content: attr(data-label);
-                    font-weight: 700;
-                    color: #475569;
-                    text-transform: uppercase;
-                    font-size: 0.85rem;
-                    flex-shrink: 0;
-                }
-
-                /* PRECIO siempre a la derecha y bien visible */
-                .table-responsive-custom td::after {
-                    content: attr(data-label = "") " Bs.";
-                    font-weight: 800;
-                    color: var(--primary-color);
-                    font-size: 1.25rem;
-                    margin-left: auto;
-                    padding-left: 15px;
-                }
-
-                /* Quitamos el ::after del título del vehículo */
-                .table-responsive-custom td.vehicle::after {
-                    content: none;
-                }
-
-                /* Título del vehículo (Motocicleta, Automóvil, etc.) */
-                .table-responsive-custom td.vehicle {
-                    display: block !important;
-                    font-size: 1.5rem;
-                    font-weight: 900;
-                    color: var(--primary-color);
-                    font-family: 'Orbitron', sans-serif;
-                    text-align: center;
-                    padding: 0 0 1.3rem 0;
-                    margin-bottom: 1rem;
-                    border-bottom: 4px solid var(--secondary-color);
-                }
-
-                .table-responsive-custom td.vehicle::before {
-                    content: none;
-                }
-
-                /* PARTICULAR destacado */
-                .table-responsive-custom td.particular {
-                    background: var(--particular-bg);
-                    color: var(--particular-text);
-                    font-size: 1.3rem;
-                    font-weight: 900;
-                    border-radius: 12px;
-                    padding: 1rem 1rem !important;
-                    margin: 0.8rem -1.6rem;
-                }
-
-                .table-responsive-custom td.particular::before {
-                    content: "PARTICULAR:";
-                }
-
-                .table-responsive-custom td.particular::after {
-                    content: attr(data-label) " Bs.";
-                    color: var(--particular-text);
-                    font-size: 1.4rem;
-                }
-
-                /* Santa Cruz amarillo */
-                .table-responsive-custom td[data-label="Santa Cruz"] {
-                    background: #fffbeb;
-                    color: #92400e;
-                    font-weight: 800;
-                    border-radius: 10px;
-                }
             }
+
+            .note {
+                font-size: 0.7rem;
+                margin: 0.8rem 0.5rem;
+                padding: 8px;
+            }
+
+
         }
     </style>
 </head>
