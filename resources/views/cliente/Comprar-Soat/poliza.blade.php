@@ -432,30 +432,22 @@
     <script>
         async function descargarPDF() {
             const btn = document.querySelector('.btn-descargar');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generando PDF...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generando...';
             btn.disabled = true;
 
             const element = document.getElementById('pdf-content');
 
-            // Forzamos que todo el contenido esté renderizado
-            element.style.width = '210mm'; // Ancho exacto A4
-            element.style.minHeight = '297mm';
-            element.style.padding = '10mm';
-            element.style.boxSizing = 'border-box';
-
             try {
                 const canvas = await html2canvas(element, {
-                    scale: 2, // Alta calidad
-                    useCORS: true, // Para imágenes externas (QR)
-                    allowTaint: false,
+                    scale: 2,
+                    useCORS: true,
                     backgroundColor: '#ffffff',
-                    scrollY: -window.scrollY, // Importante
-                    windowWidth: 794, // 210mm en 96dpi
-                    windowHeight: 1123, // 297mm en 96dpi
-                    logging: false
+                    logging: false,
+                    width: element.scrollWidth,
+                    height: element.scrollHeight
                 });
 
-                const imgData = canvas.toDataURL('image/png');
+                const imgData = canvas.toDataURL('image/jpeg', 0.95); // JPEG más ligero y compatible
                 const {
                     jsPDF
                 } = window.jspdf;
@@ -463,32 +455,44 @@
 
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = pdf.internal.pageSize.getHeight();
-                const imgWidth = canvas.width * 0.264583; // px → mm
-                const imgHeight = canvas.height * 0.264583;
+
+                const imgWidth = pdfWidth;
+                const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
                 let heightLeft = imgHeight;
                 let position = 0;
 
-                // Primera página
-                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pdfHeight;
 
-                // Si sobra contenido → añadir páginas extras
-                while (heightLeft > 0) {
+                while (heightLeft >= 0) {
                     position = heightLeft - imgHeight;
                     pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pdfHeight;
                 }
 
-                pdf.save(`SOAT_${{ $poliza->numero_poliza }}_Pankej.pdf`);
+                // ESTE ES EL TRUCO CLAVE PARA QUE FUNCIONE EN MÓVIL
+                const pdfBlob = pdf.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+
+                // Crear enlace invisible y hacer click automático
+                const a = document.createElement('a');
+                a.href = pdfUrl;
+                a.download = `SOAT_${{ $poliza->numero_poliza }}_Pankej.pdf`; // Nombre limpio
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Limpiar memoria
+                setTimeout(() => URL.revokeObjectURL(pdfUrl), 100);
 
                 btn.innerHTML = '<i class="fas fa-download me-2"></i>DESCARGAR PÓLIZA SOAT';
                 btn.disabled = false;
 
             } catch (err) {
                 console.error(err);
-                alert('Error al generar el PDF. Intenta de nuevo.');
+                alert('Error al generar el PDF. Intenta de nuevo o usa PC.');
                 btn.innerHTML = '<i class="fas fa-download me-2"></i>DESCARGAR PÓLIZA SOAT';
                 btn.disabled = false;
             }
