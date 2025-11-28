@@ -398,16 +398,109 @@
                 font-size: 0.75rem;
             }
 
-            th.particular,
-            td.particular {
-                font-size: 0.78rem;
+            /* ================================================================
+   TABLA SOAT EN CELULAR – CLARO: PARTICULAR + PÚBLICO (9 deptos)
+   ================================================================ */
+            @media (max-width: 768px) {
+                .table-responsive-custom {
+                    overflow-x: hidden !important;
+                    margin: 0 0.8rem;
+                }
 
-            }
+                .table-responsive-custom thead {
+                    display: none;
+                }
 
-            .note {
-                font-size: 0.7rem;
-                margin: 0.8rem 0.5rem;
-                padding: 8px;
+                .table-responsive-custom tr {
+                    display: block;
+                    background: white;
+                    border-radius: 20px;
+                    margin-bottom: 2rem;
+                    padding: 1.8rem;
+                    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+                    border-left: 8px solid var(--secondary-color);
+                }
+
+                /* Título del vehículo */
+                .table-responsive-custom td.vehicle {
+                    display: block !important;
+                    text-align: center;
+                    font-size: 1.65rem;
+                    font-weight: 900;
+                    font-family: 'Orbitron', sans-serif;
+                    color: var(--primary-color);
+                    padding-bottom: 1.4rem !important;
+                    margin-bottom: 1.4rem;
+                    border-bottom: 5px solid var(--secondary-color);
+                }
+
+                .table-responsive-custom td.vehicle::before {
+                    content: none;
+                }
+
+                /* ================= PARTICULAR ================= */
+                .table-responsive-custom td.particular {
+                    display: flex !important;
+                    justify-content: space-between;
+                    background: var(--particular-bg);
+                    color: var(--particular-text);
+                    font-size: 1.4rem;
+                    font-weight: 900;
+                    padding: 1.1rem 1.4rem !important;
+                    margin: 0 -1.8rem 1.2rem -1.8rem;
+                    border-radius: 14px;
+                }
+
+                .table-responsive-custom td.particular::before {
+                    content: "PARTICULAR";
+                    font-size: 1rem;
+                }
+
+                /* ================= PÚBLICO (9 departamentos) ================= */
+                .table-responsive-custom td:not(.vehicle):not(.particular) {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0.95rem 0;
+                    border-bottom: 1px solid #f0f0f0;
+                    font-size: 1.12rem;
+                    font-weight: 600;
+                    color: var(--primary-color);
+                }
+
+                .table-responsive-custom td:not(.vehicle):not(.particular)::before {
+                    content: attr(data-label);
+                    font-weight: 700;
+                    color: #475569;
+                    text-transform: uppercase;
+                    font-size: 0.9rem;
+                }
+
+                /* Título de la sección PÚBLICO */
+                .table-responsive-custom tr::before {
+                    content: "PÚBLICO";
+                    display: block;
+                    background: var(--public-header-bg);
+                    color: var(--public-header-text);
+                    font-weight: 900;
+                    font-size: 1.1rem;
+                    text-align: center;
+                    padding: 0.8rem;
+                    margin: -1.8rem -1.8rem 1.4rem -1.8rem;
+                    border-radius: 14px 14px 0 0;
+                }
+
+                /* Santa Cruz destacado */
+                .table-responsive-custom td[data-label="Santa Cruz"] {
+                    background: #fffbeb;
+                    color: #92400e;
+                    font-weight: 800;
+                    border-radius: 12px;
+                    padding: 0.9rem 1rem !important;
+                }
+
+                .table-responsive-custom td:last-child {
+                    border-bottom: none;
+                }
             }
 
 
