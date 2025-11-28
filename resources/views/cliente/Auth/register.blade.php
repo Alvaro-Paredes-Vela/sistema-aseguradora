@@ -261,22 +261,26 @@
             margin-top: 0.25rem;
         }
 
-        /* AQUÍ ESTÁ LA CLAVE: RESPONSIVE PERFECTO PARA CELULAR */
+        /* RESPONSIVE MÓVIL – PERFECTO (sin línea rara arriba) */
         @media (max-width: 576px) {
             body {
-                align-items: flex-start;
-                padding: 15px 0;
+                align-items: stretch;
+                /* ← Cambiado: ahora ocupa todo el alto */
+                padding: 0;
             }
 
             .register-card {
                 max-width: 95vw;
-                margin: 10px auto;
+                margin: 0 auto;
                 padding: 2rem 1.5rem;
-                border-radius: 1.4rem;
-                min-height: 90vh;
+                border-radius: 1.4rem 1.4rem 0 0;
+                /* ← Redondea solo abajo y laterales */
+                min-height: 100vh;
+                /* ← Ocupa TODA la pantalla */
+                border-radius: 0;
+                /* ← Quita borde superior para que pegue al tope */
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
             }
 
             /* Todos los campos en una sola columna */
