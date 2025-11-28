@@ -30,6 +30,12 @@ class PolizaController extends Controller
         $placa = strtoupper($request->placa);
         $vehiculo = Vehiculo::where('placa', $placa)->first();
 
+        // SI NO ENCUENTRA EL VEHÍCULO → redirigir con error
+        if (!$vehiculo) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'No se encontró ningún vehículo con la placa ingresado.');
+        }
         // 2. ¿TIENE SEGURO AUTOMOTRIZ VIGENTE?
         $tieneAutomotriz = DB::table('polizas')
             ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')

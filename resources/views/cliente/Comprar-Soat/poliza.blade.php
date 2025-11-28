@@ -231,6 +231,22 @@
             border: 8px solid var(--white);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+
+        @media print {
+            body {
+                background: white !important;
+            }
+
+            .btn-descargar,
+            .step-container>.container>.row>div:last-child {
+                display: none !important;
+            }
+
+            .pdf-container {
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+        }
     </style>
 </head>
 
@@ -414,37 +430,68 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        function descargarPDF() {
+        async function descargarPDF() {
             const btn = document.querySelector('.btn-descargar');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generando PDF...';
             btn.disabled = true;
 
             const element = document.getElementById('pdf-content');
 
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#ffffff'
-            }).then(canvas => {
+            // Forzamos que todo el contenido esté renderizado
+            element.style.width = '210mm'; // Ancho exacto A4
+            element.style.minHeight = '297mm';
+            element.style.padding = '10mm';
+            element.style.boxSizing = 'border-box';
+
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2, // Alta calidad
+                    useCORS: true, // Para imágenes externas (QR)
+                    allowTaint: false,
+                    backgroundColor: '#ffffff',
+                    scrollY: -window.scrollY, // Importante
+                    windowWidth: 794, // 210mm en 96dpi
+                    windowHeight: 1123, // 297mm en 96dpi
+                    logging: false
+                });
+
                 const imgData = canvas.toDataURL('image/png');
                 const {
                     jsPDF
                 } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
 
-                const imgWidth = 210;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = canvas.width * 0.264583; // px → mm
+                const imgHeight = canvas.height * 0.264583;
 
-                pdf.save(`SOAT_{{ $poliza->numero_poliza }}_Pankej.pdf`);
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                // Primera página
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                heightLeft -= pdfHeight;
+
+                // Si sobra contenido → añadir páginas extras
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                    heightLeft -= pdfHeight;
+                }
+
+                pdf.save(`SOAT_${{ $poliza->numero_poliza }}_Pankej.pdf`);
 
                 btn.innerHTML = '<i class="fas fa-download me-2"></i>DESCARGAR PÓLIZA SOAT';
                 btn.disabled = false;
-            }).catch(() => {
-                alert('Error al generar PDF');
+
+            } catch (err) {
+                console.error(err);
+                alert('Error al generar el PDF. Intenta de nuevo.');
                 btn.innerHTML = '<i class="fas fa-download me-2"></i>DESCARGAR PÓLIZA SOAT';
                 btn.disabled = false;
-            });
+            }
         }
     </script>
 </body>

@@ -414,6 +414,12 @@ class SoatController extends Controller
             ->where('placa', $placa)
             ->first();
 
+        // SI NO ENCUENTRA EL VEHÍCULO → redirigir con error
+        if (!$vehiculo) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'No se encontró ningún vehículo con la placa, RUATs ingresado.');
+        }
         $tieneAutomotriz = DB::table('polizas')
             ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
             ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
@@ -468,6 +474,12 @@ class SoatController extends Controller
                 ->orWhere('RUAT', $busqueda);
         })->first();
 
+        // SI NO ENCUENTRA EL VEHÍCULO → redirigir con error
+        if (!$vehiculo) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'No se encontró ningún vehículo con esa placa.');
+        }
         $tieneAutomotriz = DB::table('polizas')
             ->join('seguros', 'polizas.id_seguro', '=', 'seguros.id_seguro')
             ->where('polizas.id_vehiculo', $vehiculo->id_vehiculo)
