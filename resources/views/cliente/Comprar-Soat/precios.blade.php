@@ -398,13 +398,27 @@
                 font-size: 0.75rem;
             }
 
+            th.particular,
+            td.particular {
+                font-size: 0.78rem;
+
+            }
+
+            .note {
+                font-size: 0.7rem;
+                margin: 0.8rem 0.5rem;
+                padding: 8px;
+            }
+
             /* ================================================================
-   TABLA SOAT MÓVIL – LA ÚNICA QUE FUNCIONA 100% (precios visibles)
+   TABLA SOAT – PERFECTA EN CELULAR (tarjetas) + 100% IGUAL EN PC
    ================================================================ */
             @media (max-width: 768px) {
+
+                /* Ocultamos la tabla normal y creamos tarjetas */
                 .table-responsive-custom {
                     overflow-x: hidden !important;
-                    margin: 0 0.5rem;
+                    margin: 0 0.8rem;
                 }
 
                 .table-responsive-custom thead {
@@ -412,92 +426,87 @@
                 }
 
                 .table-responsive-custom tr {
+                    display: block;
                     background: white;
-                    border-radius: 18px;
+                    border-radius: 20px;
                     margin-bottom: 1.8rem;
-                    padding: 1.6rem;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
-                    border-left: 7px solid var(--secondary-color);
-                    display: block;
+                    padding: 1.8rem;
+                    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+                    border-left: 8px solid var(--secondary-color);
                 }
 
-                /* VEHÍCULO */
-                .table-responsive-custom td.vehicle {
-                    font-family: 'Orbitron', sans-serif;
-                    font-size: 1.55rem;
-                    font-weight: 900;
-                    color: var(--primary-color);
-                    text-align: center;
-                    padding-bottom: 1.2rem;
-                    margin-bottom: 1.2rem;
-                    border-bottom: 4px solid var(--secondary-color);
-                    display: block;
-                }
-
-                /* PARTICULAR */
-                .table-responsive-custom td.particular {
-                    background: var(--particular-bg);
-                    color: var(--particular-text);
-                    font-size: 1.35rem;
-                    font-weight: 900;
-                    text-align: center;
-                    padding: 1rem;
-                    margin: 1rem -1.6rem;
-                    border-radius: 14px;
-                    display: block;
-                }
-
-                /* TÍTULO PÚBLICO */
-                .table-responsive-custom tr::before {
-                    content: "PÚBLICO";
-                    display: block;
-                    background: var(--public-header-bg);
-                    color: var(--public-header-text);
-                    font-weight: 900;
-                    font-size: 1.1rem;
-                    text-align: center;
-                    padding: 0.8rem;
-                    margin: 1.4rem -1.6rem 1rem -1.6rem;
-                    border-radius: 14px;
-                }
-
-                /* TODOS LOS DEPARTAMENTOS + PRECIO (LO MÁS IMPORTANTE) */
-                .table-responsive-custom td:not(.vehicle):not(.particular) {
-                    display: flex !important;
-                    justify-content: space-between !important;
+                .table-responsive-custom td {
+                    display: flex;
+                    justify-content: space-between;
                     align-items: center;
-                    padding: 1rem 0;
+                    padding: 0.9rem 0;
+                    border-bottom: 1px solid #f0f0f0;
                     font-size: 1.1rem;
                     font-weight: 600;
-                    color: var(--primary-color);
-                    border-bottom: 1px solid #eee;
-                }
-
-                .table-responsive-custom td:not(.vehicle):not(.particular) span.depto {
-                    font-weight: 700;
-                    color: #475569;
-                    text-transform: uppercase;
-                    font-size: 0.9rem;
-                }
-
-                .table-responsive-custom td:not(.vehicle):not(.particular) span.precio {
-                    font-weight: 800;
-                    font-size: 1.25rem;
-                }
-
-                /* Santa Cruz */
-                .table-responsive-custom td[data-label="Santa Cruz"] {
-                    background: #fffbeb;
-                    border-radius: 12px;
-                    padding: 1rem 1rem !important;
                 }
 
                 .table-responsive-custom td:last-child {
                     border-bottom: none;
                 }
+
+                /* Etiqueta (departamento) a la izquierda */
+                .table-responsive-custom td::before {
+                    content: attr(data-label);
+                    font-weight: 700;
+                    color: #475569;
+                    text-transform: uppercase;
+                    font-size: 0.88rem;
+                    letter-spacing: 0.5px;
+                }
+
+                /* Precio a la derecha, grande y en azul */
+                .table-responsive-custom td {
+                    color: var(--primary-color);
+                }
+
+                /* Nombre del vehículo – título grande */
+                .table-responsive-custom td.vehicle {
+                    display: block !important;
+                    text-align: center;
+                    font-size: 1.6rem;
+                    font-weight: 900;
+                    color: var(--primary-color);
+                    font-family: 'Orbitron', sans-serif;
+                    padding: 0 0 1.4rem 0 !important;
+                    margin-bottom: 1.2rem;
+                    border-bottom: 5px solid var(--secondary-color);
+                    background: transparent !important;
+                }
+
+                .table-responsive-custom td.vehicle::before {
+                    content: none;
+                }
+
+                /* PARTICULAR – destacado */
+                .table-responsive-custom td.particular {
+                    background: var(--particular-bg);
+                    color: var(--particular-text);
+                    font-size: 1.35rem;
+                    font-weight: 900;
+                    border-radius: 14px;
+                    padding: 1.1rem 1.2rem !important;
+                    margin: 1rem -1.8rem;
+                }
+
+                .table-responsive-custom td.particular::before {
+                    content: "PARTICULAR:";
+                    color: var(--particular-text);
+                }
+
+                /* Santa Cruz – amarillo */
+                .table-responsive-custom td[data-label="Santa Cruz"] {
+                    background: #fffbeb;
+                    color: #92400e;
+                    font-weight: 800;
+                    border-radius: 12px;
+                    padding: 0.9rem 1rem !important;
+                }
             }
-
-
         }
     </style>
 </head>
