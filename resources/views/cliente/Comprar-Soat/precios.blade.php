@@ -399,61 +399,56 @@
             }
 
             /* ================================================================
-   TABLA SOAT EN CELULAR – VERSIÓN QUE SÍ FUNCIONA 100% (2025)
+   TABLA SOAT MÓVIL – LA ÚNICA QUE FUNCIONA 100% (precios visibles)
    ================================================================ */
             @media (max-width: 768px) {
                 .table-responsive-custom {
                     overflow-x: hidden !important;
-                    margin: 0 1rem;
+                    margin: 0 0.5rem;
                 }
 
                 .table-responsive-custom thead {
                     display: none;
                 }
 
-                .table-responsive-custom tbody,
-                .table-responsive-custom tr,
-                .table-responsive-custom td {
-                    display: block;
-                    width: 100%;
-                }
-
                 .table-responsive-custom tr {
                     background: white;
-                    border-radius: 20px;
-                    margin-bottom: 2rem;
-                    padding: 2rem 1.8rem;
-                    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
-                    border-left: 8px solid var(--secondary-color);
+                    border-radius: 18px;
+                    margin-bottom: 1.8rem;
+                    padding: 1.6rem;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+                    border-left: 7px solid var(--secondary-color);
+                    display: block;
                 }
 
-                /* TÍTULO DEL VEHÍCULO */
+                /* VEHÍCULO */
                 .table-responsive-custom td.vehicle {
                     font-family: 'Orbitron', sans-serif;
-                    font-size: 1.7rem !important;
+                    font-size: 1.55rem;
                     font-weight: 900;
                     color: var(--primary-color);
                     text-align: center;
-                    padding: 0 0 1.5rem 0 !important;
-                    margin-bottom: 1.5rem;
-                    border-bottom: 5px solid var(--secondary-color);
-                    position: relative;
+                    padding-bottom: 1.2rem;
+                    margin-bottom: 1.2rem;
+                    border-bottom: 4px solid var(--secondary-color);
+                    display: block;
                 }
 
-                /* PARTICULAR – BLOQUE AZUL */
+                /* PARTICULAR */
                 .table-responsive-custom td.particular {
                     background: var(--particular-bg);
                     color: var(--particular-text);
-                    font-size: 1.4rem;
+                    font-size: 1.35rem;
                     font-weight: 900;
-                    padding: 1.2rem 1.5rem !important;
-                    margin: 1.5rem -1.8rem;
-                    border-radius: 16px;
                     text-align: center;
+                    padding: 1rem;
+                    margin: 1rem -1.6rem;
+                    border-radius: 14px;
+                    display: block;
                 }
 
-                /* TÍTULO "PÚBLICO" */
-                .table-responsive-custom tr::after {
+                /* TÍTULO PÚBLICO */
+                .table-responsive-custom tr::before {
                     content: "PÚBLICO";
                     display: block;
                     background: var(--public-header-bg);
@@ -461,42 +456,44 @@
                     font-weight: 900;
                     font-size: 1.1rem;
                     text-align: center;
-                    padding: 0.9rem;
-                    margin: 1.5rem -1.8rem 1.2rem -1.8rem;
-                    border-radius: 16px;
+                    padding: 0.8rem;
+                    margin: 1.4rem -1.6rem 1rem -1.6rem;
+                    border-radius: 14px;
                 }
 
-                /* TODOS LOS DEPARTAMENTOS (excepto vehículo y particular) */
+                /* TODOS LOS DEPARTAMENTOS + PRECIO (LO MÁS IMPORTANTE) */
                 .table-responsive-custom td:not(.vehicle):not(.particular) {
                     display: flex !important;
-                    justify-content: space-between;
+                    justify-content: space-between !important;
                     align-items: center;
                     padding: 1rem 0;
-                    border-bottom: 1px solid #f0f0f0;
-                    font-size: 1.15rem;
+                    font-size: 1.1rem;
                     font-weight: 600;
                     color: var(--primary-color);
+                    border-bottom: 1px solid #eee;
                 }
 
-                .table-responsive-custom td:not(.vehicle):not(.particular)::before {
-                    content: attr(data-label);
+                .table-responsive-custom td:not(.vehicle):not(.particular) span.depto {
                     font-weight: 700;
                     color: #475569;
                     text-transform: uppercase;
                     font-size: 0.9rem;
                 }
 
-                .table-responsive-custom td:not(.vehicle):not(.particular):last-of-type {
-                    border-bottom: none;
+                .table-responsive-custom td:not(.vehicle):not(.particular) span.precio {
+                    font-weight: 800;
+                    font-size: 1.25rem;
                 }
 
-                /* SANTA CRUZ DESTACADO */
+                /* Santa Cruz */
                 .table-responsive-custom td[data-label="Santa Cruz"] {
                     background: #fffbeb;
-                    color: #92400e;
-                    font-weight: 800;
                     border-radius: 12px;
-                    padding: 1rem 1.2rem !important;
+                    padding: 1rem 1rem !important;
+                }
+
+                .table-responsive-custom td:last-child {
+                    border-bottom: none;
                 }
             }
 
