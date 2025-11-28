@@ -404,10 +404,6 @@
                     margin: 0 0.8rem;
                 }
 
-                .table-responsive-custom table {
-                    border: 0;
-                }
-
                 .table-responsive-custom thead {
                     display: none;
                 }
@@ -415,8 +411,8 @@
                 .table-responsive-custom tr {
                     background: white;
                     border-radius: 18px;
-                    margin-bottom: 1.5rem;
-                    padding: 1.5rem;
+                    margin-bottom: 1.6rem;
+                    padding: 1.6rem;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                     border-left: 7px solid var(--secondary-color);
                     display: block;
@@ -425,7 +421,8 @@
                 .table-responsive-custom td {
                     display: flex;
                     justify-content: space-between;
-                    padding: 0.9rem 0;
+                    align-items: center;
+                    padding: 0.85rem 0;
                     border-bottom: 1px solid #f1f5f9;
                     font-size: 1.05rem;
                     font-weight: 600;
@@ -435,25 +432,40 @@
                     border-bottom: none;
                 }
 
-                /* Etiqueta a la izquierda */
+                /* NOMBRE DEL DEPARTAMENTO / PARTICULAR */
                 .table-responsive-custom td::before {
                     content: attr(data-label);
                     font-weight: 700;
                     color: #475569;
                     text-transform: uppercase;
                     font-size: 0.85rem;
-                    letter-spacing: 0.5px;
+                    flex-shrink: 0;
                 }
 
-                /* Título del vehículo (primera celda) */
+                /* PRECIO siempre a la derecha y bien visible */
+                .table-responsive-custom td::after {
+                    content: attr(data-label = "") " Bs.";
+                    font-weight: 800;
+                    color: var(--primary-color);
+                    font-size: 1.25rem;
+                    margin-left: auto;
+                    padding-left: 15px;
+                }
+
+                /* Quitamos el ::after del título del vehículo */
+                .table-responsive-custom td.vehicle::after {
+                    content: none;
+                }
+
+                /* Título del vehículo (Motocicleta, Automóvil, etc.) */
                 .table-responsive-custom td.vehicle {
                     display: block !important;
-                    font-size: 1.45rem;
+                    font-size: 1.5rem;
                     font-weight: 900;
                     color: var(--primary-color);
                     font-family: 'Orbitron', sans-serif;
                     text-align: center;
-                    padding: 0 0 1.2rem 0 !important;
+                    padding: 0 0 1.3rem 0;
                     margin-bottom: 1rem;
                     border-bottom: 4px solid var(--secondary-color);
                 }
@@ -462,30 +474,33 @@
                     content: none;
                 }
 
-                /* PARTICULAR – destacado */
+                /* PARTICULAR destacado */
                 .table-responsive-custom td.particular {
                     background: var(--particular-bg);
                     color: var(--particular-text);
-                    font-weight: 800;
-                    font-size: 1.2rem;
+                    font-size: 1.3rem;
+                    font-weight: 900;
                     border-radius: 12px;
-                    padding: 1rem !important;
-                    margin: 0.8rem -1.5rem;
+                    padding: 1rem 1rem !important;
+                    margin: 0.8rem -1.6rem;
                 }
 
                 .table-responsive-custom td.particular::before {
                     content: "PARTICULAR:";
-                    color: var(--particular-text);
-                    font-weight: 900;
                 }
 
-                /* Santa Cruz destacado */
+                .table-responsive-custom td.particular::after {
+                    content: attr(data-label) " Bs.";
+                    color: var(--particular-text);
+                    font-size: 1.4rem;
+                }
+
+                /* Santa Cruz amarillo */
                 .table-responsive-custom td[data-label="Santa Cruz"] {
                     background: #fffbeb;
                     color: #92400e;
                     font-weight: 800;
                     border-radius: 10px;
-                    padding: 0.9rem 1rem !important;
                 }
             }
         }
