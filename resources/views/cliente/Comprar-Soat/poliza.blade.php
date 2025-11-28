@@ -383,13 +383,6 @@
                             </div>
                         </div>
 
-                        <!-- QR VERIFICACIÓN -->
-                        <div class="qr-container">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ $poliza->numero_poliza }}"
-                                alt="QR Verificación" class="qr-code">
-                            <p class="mt-2 text-muted"><small>Escanea para verificar en soat.pankej.bo</small></p>
-                        </div>
-
                         <!-- FOOTER -->
                         <div class="footer-section">
                             <div class="footer-grid">
