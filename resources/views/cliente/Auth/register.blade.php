@@ -23,14 +23,13 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
             background: url('https://img.freepik.com/fotos-premium/noche-lluviosa-ciudad-conduccion-automoviles-calles-humedas-reflexiones-gotas-lluvia-iluminan-escena-urbana_875722-62655.jpg?semt=ais_hybrid&w=740&q=80') no-repeat center center fixed;
             background-size: cover;
-            overflow: hidden;
             position: relative;
         }
 
@@ -52,7 +51,6 @@
             padding: 1.5rem;
             width: 100%;
             max-width: 580px;
-            /* ← Más chico como pediste (antes 700px) */
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
             position: relative;
@@ -191,7 +189,7 @@
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 0.7rem;
-            padding: 10px;
+            padding: 14px;
             font-weight: 700;
             color: white;
             width: 100%;
@@ -200,6 +198,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.5s ease;
+            margin-top: 1.5rem;
         }
 
         .btn-register::before {
@@ -254,38 +253,67 @@
             color: var(--secondary-color);
         }
 
-        @media (max-width: 768px) {
-            .register-card {
-                max-width: 90%;
-                padding: 1.2rem;
-            }
-
-            .col-md-6 {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-
-            .logo {
-                width: 60px;
-                height: 60px;
-                font-size: 1.8rem;
-            }
-
-            .register-card h1 {
-                font-size: 1.6rem;
-            }
-
-            .form-control {
-                height: 40px;
-            }
-        }
-
         .invalid-feedback {
             display: block;
             color: #dc3545;
             font-size: 0.875rem;
             text-align: left;
             margin-top: 0.25rem;
+        }
+
+        /* AQUÍ ESTÁ LA CLAVE: RESPONSIVE PERFECTO PARA CELULAR */
+        @media (max-width: 576px) {
+            body {
+                align-items: flex-start;
+                padding: 15px 0;
+            }
+
+            .register-card {
+                max-width: 95vw;
+                margin: 10px auto;
+                padding: 2rem 1.5rem;
+                border-radius: 1.4rem;
+                min-height: 90vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            /* Todos los campos en una sola columna */
+            .col-md-6 {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+                margin-bottom: 1rem;
+            }
+
+            .logo {
+                width: 65px;
+                height: 65px;
+                font-size: 1.9rem;
+            }
+
+            .register-card h1 {
+                font-size: 1.7rem;
+            }
+
+            .form-control {
+                height: 50px;
+                font-size: 1rem;
+            }
+
+            .btn-register {
+                padding: 16px;
+                font-size: 1.1rem;
+                margin-top: auto;
+            }
+
+            /* El formulario scrollea solo si es necesario */
+            .row {
+                flex-grow: 1;
+                overflow-y: auto;
+                padding-right: 5px;
+                margin-bottom: 1rem;
+            }
         }
     </style>
 </head>
@@ -307,8 +335,6 @@
 
         <form method="POST" action="{{ route('cliente.register') }}">
             @csrf
-
-            <!-- Campo oculto para que siempre quede Activo por defecto -->
             <input type="hidden" name="estado" value="1">
 
             <div class="row">
