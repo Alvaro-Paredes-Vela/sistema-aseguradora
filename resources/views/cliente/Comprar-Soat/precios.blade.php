@@ -399,70 +399,81 @@
             }
 
             /* ================================================================
-   TABLA SOAT EN CELULAR – CLARO: PARTICULAR + PÚBLICO (9 deptos)
+   TABLA SOAT EN CELULAR – VERSIÓN QUE SÍ FUNCIONA 100% (2025)
    ================================================================ */
             @media (max-width: 768px) {
                 .table-responsive-custom {
                     overflow-x: hidden !important;
-                    margin: 0 0.8rem;
+                    margin: 0 1rem;
                 }
 
                 .table-responsive-custom thead {
                     display: none;
                 }
 
-                .table-responsive-custom tr {
+                .table-responsive-custom tbody,
+                .table-responsive-custom tr,
+                .table-responsive-custom td {
                     display: block;
+                    width: 100%;
+                }
+
+                .table-responsive-custom tr {
                     background: white;
                     border-radius: 20px;
                     margin-bottom: 2rem;
-                    padding: 1.8rem;
+                    padding: 2rem 1.8rem;
                     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
                     border-left: 8px solid var(--secondary-color);
                 }
 
-                /* Título del vehículo */
+                /* TÍTULO DEL VEHÍCULO */
                 .table-responsive-custom td.vehicle {
-                    display: block !important;
-                    text-align: center;
-                    font-size: 1.65rem;
-                    font-weight: 900;
                     font-family: 'Orbitron', sans-serif;
+                    font-size: 1.7rem !important;
+                    font-weight: 900;
                     color: var(--primary-color);
-                    padding-bottom: 1.4rem !important;
-                    margin-bottom: 1.4rem;
+                    text-align: center;
+                    padding: 0 0 1.5rem 0 !important;
+                    margin-bottom: 1.5rem;
                     border-bottom: 5px solid var(--secondary-color);
+                    position: relative;
                 }
 
-                .table-responsive-custom td.vehicle::before {
-                    content: none;
-                }
-
-                /* ================= PARTICULAR ================= */
+                /* PARTICULAR – BLOQUE AZUL */
                 .table-responsive-custom td.particular {
-                    display: flex !important;
-                    justify-content: space-between;
                     background: var(--particular-bg);
                     color: var(--particular-text);
                     font-size: 1.4rem;
                     font-weight: 900;
-                    padding: 1.1rem 1.4rem !important;
-                    margin: 0 -1.8rem 1.2rem -1.8rem;
-                    border-radius: 14px;
+                    padding: 1.2rem 1.5rem !important;
+                    margin: 1.5rem -1.8rem;
+                    border-radius: 16px;
+                    text-align: center;
                 }
 
-                .table-responsive-custom td.particular::before {
-                    content: "PARTICULAR";
-                    font-size: 1rem;
+                /* TÍTULO "PÚBLICO" */
+                .table-responsive-custom tr::after {
+                    content: "PÚBLICO";
+                    display: block;
+                    background: var(--public-header-bg);
+                    color: var(--public-header-text);
+                    font-weight: 900;
+                    font-size: 1.1rem;
+                    text-align: center;
+                    padding: 0.9rem;
+                    margin: 1.5rem -1.8rem 1.2rem -1.8rem;
+                    border-radius: 16px;
                 }
 
-                /* ================= PÚBLICO (9 departamentos) ================= */
+                /* TODOS LOS DEPARTAMENTOS (excepto vehículo y particular) */
                 .table-responsive-custom td:not(.vehicle):not(.particular) {
-                    display: flex;
+                    display: flex !important;
                     justify-content: space-between;
-                    padding: 0.95rem 0;
+                    align-items: center;
+                    padding: 1rem 0;
                     border-bottom: 1px solid #f0f0f0;
-                    font-size: 1.12rem;
+                    font-size: 1.15rem;
                     font-weight: 600;
                     color: var(--primary-color);
                 }
@@ -475,31 +486,17 @@
                     font-size: 0.9rem;
                 }
 
-                /* Título de la sección PÚBLICO */
-                .table-responsive-custom tr::before {
-                    content: "PÚBLICO";
-                    display: block;
-                    background: var(--public-header-bg);
-                    color: var(--public-header-text);
-                    font-weight: 900;
-                    font-size: 1.1rem;
-                    text-align: center;
-                    padding: 0.8rem;
-                    margin: -1.8rem -1.8rem 1.4rem -1.8rem;
-                    border-radius: 14px 14px 0 0;
+                .table-responsive-custom td:not(.vehicle):not(.particular):last-of-type {
+                    border-bottom: none;
                 }
 
-                /* Santa Cruz destacado */
+                /* SANTA CRUZ DESTACADO */
                 .table-responsive-custom td[data-label="Santa Cruz"] {
                     background: #fffbeb;
                     color: #92400e;
                     font-weight: 800;
                     border-radius: 12px;
-                    padding: 0.9rem 1rem !important;
-                }
-
-                .table-responsive-custom td:last-child {
-                    border-bottom: none;
+                    padding: 1rem 1.2rem !important;
                 }
             }
 
