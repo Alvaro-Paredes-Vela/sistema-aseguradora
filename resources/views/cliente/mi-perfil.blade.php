@@ -284,6 +284,65 @@
             }
         }
 
+        @media (max-width: 576px) {
+
+            /* 1. Botones de "Iniciar Sesión" y "Registrarme" → más espacio y uno debajo del otro */
+            .navbar-nav .nav-item {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .navbar-nav .btn-sm {
+                width: 100% !important;
+                justify-content: center;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                margin-bottom: 0.5rem !important;
+                font-size: 0.95rem;
+                padding: 0.65rem 1rem;
+            }
+
+            /* 2. Los botones grandes de SOAT y Automotriz queden DENTRO del card blanco */
+            .option-card {
+                margin: 1rem 0.8rem !important;
+                padding: 2rem 1.5rem;
+                height: auto !important;
+                /* ← permite que se ajuste al contenido */
+                min-height: 280px;
+            }
+
+            .option-card .btn-primary-custom {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1.1rem;
+                margin-top: auto;
+                /* ← empuja el botón al fondo del card */
+            }
+
+            /* 3. Menú hamburguesa se vea lindo cuando se abre */
+            .navbar-collapse {
+                background: rgba(255, 255, 255, 0.98);
+                padding: 1rem;
+                border-radius: 12px;
+                margin-top: 1rem;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            /* 4. Logo + nombre no se desborde en pantallas pequeñas */
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .company-name {
+                font-size: 1.4rem !important;
+            }
+
+            .logo {
+                width: 65px;
+                height: 65px;
+            }
+        }
+
         .profile-card {
             animation: fadeInUp 0.6s ease forwards;
         }
