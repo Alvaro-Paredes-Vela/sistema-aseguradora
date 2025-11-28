@@ -399,8 +399,6 @@
             }
 
             @media (max-width: 768px) {
-
-                /* Convertimos la tabla en tarjetas verticales */
                 .table-responsive-custom {
                     overflow-x: hidden !important;
                     margin: 0 0.8rem;
@@ -412,84 +410,67 @@
 
                 .table-responsive-custom thead {
                     display: none;
-                    /* Ocultamos la cabecera normal */
-                }
-
-                .table-responsive-custom tbody,
-                .table-responsive-custom tr,
-                .table-responsive-custom td {
-                    display: block;
-                    width: 100%;
                 }
 
                 .table-responsive-custom tr {
                     background: white;
                     border-radius: 18px;
-                    margin-bottom: 1.4rem;
-                    padding: 1.4rem;
+                    margin-bottom: 1.5rem;
+                    padding: 1.5rem;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                     border-left: 7px solid var(--secondary-color);
-                    overflow: hidden;
+                    display: block;
                 }
 
-                /* Cada celda → línea con etiqueta a la izquierda y precio a la derecha */
                 .table-responsive-custom td {
-                    border: none;
-                    padding: 0.7rem 0;
-                    text-align: right;
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0.9rem 0;
+                    border-bottom: 1px solid #f1f5f9;
                     font-size: 1.05rem;
                     font-weight: 600;
-                    border-bottom: 1px solid #f1f5f9;
-                    position: relative;
                 }
 
                 .table-responsive-custom td:last-child {
                     border-bottom: none;
                 }
 
-                /* Etiqueta (Particular, La Paz, Santa Cruz, etc.) */
+                /* Etiqueta a la izquierda */
                 .table-responsive-custom td::before {
                     content: attr(data-label);
-                    position: absolute;
-                    left: 0;
-                    width: 50%;
-                    padding-left: 0;
                     font-weight: 700;
-                    text-transform: uppercase;
-                    font-size: 0.82rem;
                     color: #475569;
+                    text-transform: uppercase;
+                    font-size: 0.85rem;
                     letter-spacing: 0.5px;
                 }
 
                 /* Título del vehículo (primera celda) */
                 .table-responsive-custom td.vehicle {
-                    all: unset;
-                    display: block;
-                    font-size: 1.4rem;
+                    display: block !important;
+                    font-size: 1.45rem;
                     font-weight: 900;
                     color: var(--primary-color);
-                    text-align: left !important;
-                    margin-bottom: 1rem;
-                    padding: 0 0 1rem 0 !important;
-                    border-bottom: 4px solid var(--secondary-color);
                     font-family: 'Orbitron', sans-serif;
+                    text-align: center;
+                    padding: 0 0 1.2rem 0 !important;
+                    margin-bottom: 1rem;
+                    border-bottom: 4px solid var(--secondary-color);
                 }
 
                 .table-responsive-custom td.vehicle::before {
                     content: none;
                 }
 
-                /* Columna PARTICULAR – se ve bien destacada */
+                /* PARTICULAR – destacado */
                 .table-responsive-custom td.particular {
                     background: var(--particular-bg);
                     color: var(--particular-text);
                     font-weight: 800;
-                    font-size: 1.15rem;
-                    border-left: 5px solid var(--primary-color);
-                    margin-left: -1.4rem;
-                    padding-left: 1.8rem !important;
-                    margin-right: -1.4rem;
-                    padding-right: 1.4rem;
+                    font-size: 1.2rem;
+                    border-radius: 12px;
+                    padding: 1rem !important;
+                    margin: 0.8rem -1.5rem;
                 }
 
                 .table-responsive-custom td.particular::before {
@@ -498,11 +479,13 @@
                     font-weight: 900;
                 }
 
-                /* Santa Cruz sigue destacada */
+                /* Santa Cruz destacado */
                 .table-responsive-custom td[data-label="Santa Cruz"] {
-                    background: #fef3c7;
+                    background: #fffbeb;
                     color: #92400e;
                     font-weight: 800;
+                    border-radius: 10px;
+                    padding: 0.9rem 1rem !important;
                 }
             }
         }
