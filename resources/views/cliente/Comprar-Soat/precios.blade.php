@@ -400,75 +400,110 @@
 
             @media (max-width: 768px) {
 
-                .table-responsive-custom table,
-                .table-responsive-custom thead,
-                .table-responsive-custom tbody,
-                .table-responsive-custom th,
-                .table-responsive-custom td,
-                .table-responsive-custom tr {
-                    display: block;
-                }
-
+                /* Convertimos la tabla en tarjetas verticales */
                 .table-responsive-custom {
                     overflow-x: hidden !important;
-                    margin: 0 1rem;
+                    margin: 0 0.8rem;
                 }
 
-                .table-responsive-custom thead tr {
-                    position: absolute;
-                    top: -9999px;
-                    left: -9999px;
+                .table-responsive-custom table {
+                    border: 0;
+                }
+
+                .table-responsive-custom thead {
+                    display: none;
+                    /* Ocultamos la cabecera normal */
+                }
+
+                .table-responsive-custom tbody,
+                .table-responsive-custom tr,
+                .table-responsive-custom td {
+                    display: block;
+                    width: 100%;
                 }
 
                 .table-responsive-custom tr {
                     background: white;
-                    border-radius: 16px;
-                    margin-bottom: 1.3rem;
+                    border-radius: 18px;
+                    margin-bottom: 1.4rem;
                     padding: 1.4rem;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                     border-left: 7px solid var(--secondary-color);
+                    overflow: hidden;
                 }
 
+                /* Cada celda → línea con etiqueta a la izquierda y precio a la derecha */
                 .table-responsive-custom td {
                     border: none;
-                    position: relative;
-                    padding: 0.75rem 0;
+                    padding: 0.7rem 0;
                     text-align: right;
-                    font-size: 1.02rem;
+                    font-size: 1.05rem;
+                    font-weight: 600;
                     border-bottom: 1px solid #f1f5f9;
-                }
-
-                .table-responsive-custom td::before {
-                    content: attr(data-label);
-                    float: left;
-                    font-weight: 700;
-                    color: var(--dark-color);
-                    text-transform: uppercase;
-                    font-size: 0.82rem;
-                    letter-spacing: 0.5px;
-                }
-
-                .table-responsive-custom td.vehicle {
-                    text-align: left !important;
-                    font-size: 1.35rem;
-                    font-weight: 900;
-                    color: var(--primary-color);
-                    background: transparent !important;
-                    border-left: none;
-                    border-bottom: 4px solid var(--secondary-color);
-                    padding-bottom: 1rem !important;
-                    margin-bottom: 0.8rem;
-                }
-
-                .table-responsive-custom td.particular::before {
-                    content: "Particular:";
-                    color: var(--particular-text);
+                    position: relative;
                 }
 
                 .table-responsive-custom td:last-child {
                     border-bottom: none;
                 }
 
+                /* Etiqueta (Particular, La Paz, Santa Cruz, etc.) */
+                .table-responsive-custom td::before {
+                    content: attr(data-label);
+                    position: absolute;
+                    left: 0;
+                    width: 50%;
+                    padding-left: 0;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    font-size: 0.82rem;
+                    color: #475569;
+                    letter-spacing: 0.5px;
+                }
+
+                /* Título del vehículo (primera celda) */
+                .table-responsive-custom td.vehicle {
+                    all: unset;
+                    display: block;
+                    font-size: 1.4rem;
+                    font-weight: 900;
+                    color: var(--primary-color);
+                    text-align: left !important;
+                    margin-bottom: 1rem;
+                    padding: 0 0 1rem 0 !important;
+                    border-bottom: 4px solid var(--secondary-color);
+                    font-family: 'Orbitron', sans-serif;
+                }
+
+                .table-responsive-custom td.vehicle::before {
+                    content: none;
+                }
+
+                /* Columna PARTICULAR – se ve bien destacada */
+                .table-responsive-custom td.particular {
+                    background: var(--particular-bg);
+                    color: var(--particular-text);
+                    font-weight: 800;
+                    font-size: 1.15rem;
+                    border-left: 5px solid var(--primary-color);
+                    margin-left: -1.4rem;
+                    padding-left: 1.8rem !important;
+                    margin-right: -1.4rem;
+                    padding-right: 1.4rem;
+                }
+
+                .table-responsive-custom td.particular::before {
+                    content: "PARTICULAR:";
+                    color: var(--particular-text);
+                    font-weight: 900;
+                }
+
+                /* Santa Cruz sigue destacada */
+                .table-responsive-custom td[data-label="Santa Cruz"] {
+                    background: #fef3c7;
+                    color: #92400e;
+                    font-weight: 800;
+                }
             }
         }
     </style>
